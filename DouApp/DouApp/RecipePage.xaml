@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="recipePage"
+             x:Class="DouApp.RecipePage">
+    <ContentPage.Content>
+        <StackLayout Margin="20,35,20,20">
+            <Entry x:Name="recipeNameEntry"
+                   Placeholder="Name"
+                   Text="{Binding PageRecipe.Name}"/>
+            <Label HeightRequest="40"
+                   HorizontalOptions="CenterAndExpand"
+                   VerticalOptions="CenterAndExpand" />
+            <Label Text="Recipe Ingredients"
+                   HorizontalOptions="StartAndExpand"
+                   VerticalOptions="Center"
+                   FontSize="Medium" />
+            <!-- Containers -->
+            <ListView x:Name="ingredientsListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Picker x:Name="containerPicker"
+                                        Title="Ingredient"
+                                        ItemsSource="{Binding BindingContext.ContainerNames, Source={x:Reference recipePage}}"
+                                        SelectedIndex="{Binding Container.ID, Mode=OneTime}"
+                                        SelectedIndexChanged="ContainerPicker_SelectedIndexChanged"
+                                        Grid.Column="0" />
+                                <Entry Text="{Binding Weight, StringFormat='{0:0.0}'}"
+                                       Placeholder="Weight"
+                                       IsVisible="{Binding Container.IsLarge}"
+                                       Grid.Column="1"/>
+                                <Picker x:Name="spoonPicker"
+                                        Title="Spoon amount"
+                                        SelectedIndex="{Binding Spoon}"
+                                        IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
+                                        Grid.Column="1">
+                                    <Picker.ItemsSource>
+                                        <x:Array Type="{x:Type x:String}">
+                                            <x:String>Quarter Spoon</x:String>
+                                            <x:String>Half Spoon</x:String>
+                                            <x:String>Full Spoon</x:String>
+                                        </x:Array>
+                                    </Picker.ItemsSource>
+                                </Picker>
+                                <Button x:Name="removeStationButton"
+                                        Text="X"
+                                        TextColor="Red"
+                                        FontSize="Large"
+                                        Grid.Column="2"
+                                        Clicked="RemoveStationButton_Clicked"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!-- Add Ingredient Button -->
+            <Button x:Name="addIngredientButton"
+                    Text="Add Ingredient"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="AddIngredientButton_Clicked" />
+            <!-- Bake Button -->
+            <Button x:Name="bakeRecipeButton"
+                    Text="Bake!"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    BackgroundColor="ForestGreen"
+                    TextColor="Black"
+                    Clicked="BakeRecipeButton_Clicked" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

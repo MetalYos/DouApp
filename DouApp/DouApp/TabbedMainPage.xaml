@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DouApp.TabbedMainPage"
+             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
+             android:TabbedPage.ToolbarPlacement="Bottom">
+  <!--Pages can be added as references or inline-->
+    <ContentPage Title="Main">
+        <StackLayout Margin="20,35,20,20">
+            <!-- Show last 3 recepies if they exist -->
+            <Label Text="Latest Recepies"
+                   HorizontalOptions="StartAndExpand"
+                   VerticalOptions="Center"
+                   FontSize="Medium"/>
+            <ListView x:Name="recipesListView"
+                      ItemSelected="RecipesListView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}"
+                                       HorizontalOptions="StartAndExpand"
+                                       VerticalOptions="Center"/>
+                                <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
+                                       HorizontalOptions="End"
+                                       VerticalOptions="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!-- New Recepie Button -->
+            <Button x:Name="newRecipeButton"
+                    Text="New Recipe"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="NewRecipeButton_Clicked" />
+            <!-- Download Recepie (Maybe) -->
+            <Button x:Name="downloadRecipeButton"
+                    Text="Download Recipe"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="DownloadRecipeButton_Clicked" />
+        </StackLayout>
+    </ContentPage>
+    <ContentPage Title="Stats">
+        <!-- Show how much is left in each container -->
+        <StackLayout Margin="20,35,20,20">
+            <Label Text="Amount left in each container"
+                   HorizontalOptions="StartAndExpand"
+                   VerticalOptions="Center"
+                   FontSize="Large"/>
+            <ListView x:Name="containersAmountListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}"
+                                           HorizontalOptions="StartAndExpand"
+                                           VerticalOptions="Center"/>
+                                <Label Text="{Binding Amount}"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage>
+    <ContentPage Title="History">
+        <!-- Show use history -->
+        <StackLayout Margin="20,35,20,20">
+            <Label Text="Recipes History"
+                   HorizontalOptions="StartAndExpand"
+                   VerticalOptions="Center"
+                   FontSize="Large"/>
+            <ListView x:Name="recipesHistoryListView"
+                      ItemSelected="RecipesListView_ItemSelected">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}"
+                                           HorizontalOptions="StartAndExpand"
+                                           VerticalOptions="Center"/>
+                                <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Center" />
+                            </StackLayout>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage>
+</TabbedPage>

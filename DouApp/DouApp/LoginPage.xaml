@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DouApp.LoginPage">
+    <ContentPage.Content>
+        <StackLayout Margin="20,35,20,20">
+            <Label Text="Welcome to Dou!"
+                   FontSize="Medium"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="CenterAndExpand" />
+            <Image Source="Logo.png" HeightRequest="200"/>
+            <Entry x:Name="usernameEntry"
+                   Placeholder="Enter Username" />
+            <Entry x:Name="passwordEntry"
+                   Placeholder="Enter Password"
+                   IsPassword="True" />
+            <Label HorizontalOptions="Center"
+                   VerticalOptions="StartAndExpand">
+                <Label.FormattedText>
+                    <FormattedString>
+                        <Span Text="Forgot password?"
+                              TextColor="SteelBlue">
+                            <Span.GestureRecognizers>
+                                <ClickGestureRecognizer Command="{Binding ClickCommand}"
+                                          CommandParameter="https://xamarin.com" />
+                            </Span.GestureRecognizers>
+                        </Span>
+                    </FormattedString>
+                </Label.FormattedText>
+            </Label>
+            <Button x:Name="loginButton"
+                    Text="Login"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="LoginButton_Clicked"/>
+            <Button x:Name="signUpButton"
+                    Text="Sign Up"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="SignUpButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
