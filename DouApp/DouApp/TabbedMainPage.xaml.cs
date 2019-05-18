@@ -66,5 +66,13 @@ namespace DouApp
                 });
             }
         }
+
+        private async void ConfigureContainersButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ConfigurePage
+            {
+                FirstTime = false
+            });
+        }
     }
 }

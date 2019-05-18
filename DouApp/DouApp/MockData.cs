@@ -83,12 +83,20 @@ namespace DouApp
 
         private void PopulateContainers()
         {
+            /*
             containers.Add(new Container(0, "Flour", 750, true));
             containers.Add(new Container(1, "Sugar", 500, true));
             containers.Add(new Container(2, "Baking Powder", 750, true));
             containers.Add(new Container(3, "Cinnamon", 25, false));
             containers.Add(new Container(4, "Other", 45, false));
             containers.Add(new Container(5, "Other2", 30, false));
+            */
+            containers.Add(new Container(0, "Large1", 500, true));
+            containers.Add(new Container(1, "Large2", 500, true));
+            containers.Add(new Container(2, "Large3", 500, true));
+            containers.Add(new Container(3, "Small1", 50, false));
+            containers.Add(new Container(4, "Small2", 50, false));
+            containers.Add(new Container(5, "Small3", 50, false));
         }
 
         public List<Container> GetContainers()

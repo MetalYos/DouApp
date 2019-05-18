@@ -25,12 +25,12 @@ namespace DouApp
             Device.OpenUri(new System.Uri(url));
         });
 
-        private void SignUpButton_Clicked(object sender, EventArgs e)
+        private async void SignUpButton_Clicked(object sender, EventArgs e)
         {
-
+            await Navigation.PushAsync(new SignUpPage());
         }
 
-        async private void LoginButton_Clicked(object sender, EventArgs e)
+        private async void LoginButton_Clicked(object sender, EventArgs e)
         {
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;

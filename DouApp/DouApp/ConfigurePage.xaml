@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DouApp.ConfigurePage">
+    <ContentPage.Content>
+        <StackLayout Margin="20,35,20,20">
+            <Label Text="Configure containers"
+                   FontSize="Medium"
+                   VerticalOptions="CenterAndExpand" 
+                   HorizontalOptions="StartAndExpand" />
+            <!-- Containers -->
+            <ListView x:Name="containersListView">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                </Grid.ColumnDefinitions>
+                                <Entry Text="{Binding Name}"
+                                       Placeholder="Name"
+                                       Grid.Column="0"/>
+                                <Entry Text="{Binding Amount, StringFormat='{0:0.0}'}"
+                                       Placeholder="Amount"
+                                       Grid.Column="1"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <!-- Save Button -->
+            <Button x:Name="saveContainersButton"
+                    Text="Save"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="SaveContainersButton_Clicked"/>
+            <!-- Cancel Button -->
+            <Button x:Name="cancelContainersButton"
+                    Text="Cancel!"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    Clicked="CancelContainersButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
