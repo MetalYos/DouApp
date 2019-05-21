@@ -4,7 +4,7 @@
              x:Class="DouApp.ConfigurePage">
     <ContentPage.Content>
         <StackLayout Margin="20,35,20,20">
-            <Label Text="Configure containers"
+            <Label Text="Configure containers (Name, Amount)"
                    FontSize="Medium"
                    VerticalOptions="CenterAndExpand" 
                    HorizontalOptions="StartAndExpand" />
@@ -15,15 +15,25 @@
                         <ViewCell>
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
+                                <Label Text="{Binding ListName}"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="CenterAndExpand" />
                                 <Entry Text="{Binding Name}"
                                        Placeholder="Name"
-                                       Grid.Column="0"/>
+                                       Grid.Column="1"/>
                                 <Entry Text="{Binding Amount, StringFormat='{0:0.0}'}"
                                        Placeholder="Amount"
-                                       Grid.Column="1"/>
+                                       HorizontalOptions="Center"
+                                       Grid.Column="2"/>
+                                <Label Text="gr"
+                                       HorizontalOptions="Start"
+                                       VerticalOptions="CenterAndExpand"
+                                       Grid.Column="3"/>
                             </Grid>
                         </ViewCell>
                     </DataTemplate>

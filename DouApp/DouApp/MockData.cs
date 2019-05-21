@@ -45,6 +45,7 @@ namespace DouApp
         public string Name { get; set; }
         public double Amount { get; set; }
         public bool IsLarge { get; set; }
+        public string ListName { get; set; }
 
         public Container()
         {
@@ -52,6 +53,10 @@ namespace DouApp
             Name = "";
             Amount = 0.0;
             IsLarge = true;
+
+            string size = "Large";
+            if (!IsLarge) size = "Small";
+            ListName = "Container " + (ID + 1).ToString() + " (" + size + ")";
         }
 
         public Container(int id, string name, double amount, bool isLarge)
@@ -60,6 +65,10 @@ namespace DouApp
             Name = name;
             Amount = amount;
             IsLarge = isLarge;
+
+            string size = "Large";
+            if (!IsLarge) size = "Small";
+            ListName = "Container " + (ID + 1).ToString() + " (" + size + ")";
         }
 
         public override string ToString()
