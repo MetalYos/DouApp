@@ -30,24 +30,20 @@ namespace DouApp
             await Navigation.PushAsync(new SignUpPage());
         }
 
-        private async void LoginButton_Clicked(object sender, EventArgs e)
+        private void LoginButton_Clicked(object sender, EventArgs e)
         {
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;
+            int id = App.Users.GetUserID(username, password);
 
-            if (username != mockUsername)
+            if (id == 0)
             {
-                await DisplayAlert("Wrong username", "The entered Username does not exist", "OK");
+                DisplayAlert("Wrong credintials", "The entered Username or Password does not exist in database", "OK");
                 return;
             }
 
-            if (password != mockPassword)
-            {
-                await DisplayAlert("Wrong password", "The entered Password does not match the given username", "OK");
-                return;
-            }
-
-            await Navigation.PushAsync(new TabbedMainPage());
+            App.UserID = id;
+            Navigation.PushAsync(new TabbedMainPage());
         }
     }
 }

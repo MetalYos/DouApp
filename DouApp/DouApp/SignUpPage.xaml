@@ -1,18 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DouApp.CustomControls;assembly=DouApp"
              x:Class="DouApp.SignUpPage">
     <ContentPage.Content>
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="Sign UP (TODO)"
+        <StackLayout Margin="10,25,10,10"
+                     Spacing="20">
+            <Label Text="Welcome"
                    FontSize="Large"
-                   VerticalOptions="CenterAndExpand" 
+                   VerticalOptions="Center" 
                    HorizontalOptions="CenterAndExpand" />
-            <Button x:Name="nextButton"
-                    Text="Next"
+            <Label Text="Please enter your personal info"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="Center"
+                       FontSize="Medium" />
+            <local:MyEntry x:Name="usernameEntry"
+                       Placeholder="Enter Username"
+                       BorderWidth="7.0"
+                       BorderRadius="20.0"
+                       BorderColor="LightGray" />
+            <local:MyEntry x:Name="emailEntry"
+                       Placeholder="Enter Email"
+                       BorderWidth="7.0"
+                       BorderRadius="20.0"
+                       BorderColor="LightGray" />
+            <local:MyEntry x:Name="passwordEntry"
+                       Placeholder="Enter Password"
+                       BorderWidth="7.0"
+                       BorderRadius="20.0"
+                       BorderColor="LightGray"
+                       IsPassword="True"/>
+            <local:MyEntry x:Name="passwordReEntry"
+                       Placeholder="Enter password again"
+                       BorderWidth="7.0"
+                       BorderRadius="20.0"
+                       BorderColor="LightGray"
+                       IsPassword="True"/>
+            <Button x:Name="registerButton"
+                    Text="Register"
                     BorderWidth="2"
                     BorderRadius="10"
-                    Clicked="NextButton_Clicked" />
+                    VerticalOptions="EndAndExpand"
+                    Clicked="RegisterButton_Clicked" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -2,6 +2,8 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using DouApp.Databases;
+
 namespace DouApp
 {
     public class NegateBooleanConverter : IValueConverter
@@ -18,7 +20,14 @@ namespace DouApp
 
     public partial class App : Application
     {
+        // User ID
+        static int userID = 0;
+        public static int UserID { get; set; }
+
+
+        // Databases
         static MockData database = null;
+        static UsersDatabase userDatabase = null;
 
         public static MockData Database
         {
@@ -29,6 +38,18 @@ namespace DouApp
                     database = new MockData();
                 }
                 return database;
+            }
+        }
+
+        public static UsersDatabase Users
+        {
+            get
+            {
+                if (userDatabase == null)
+                {
+                    userDatabase = new UsersDatabase();
+                }
+                return userDatabase;
             }
         }
 
