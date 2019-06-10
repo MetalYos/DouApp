@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Name="configurePage"
              x:Class="DouApp.ConfigurePage">
     <ContentPage.Content>
         <StackLayout Margin="20,35,20,20">
@@ -20,12 +21,21 @@
                                     <ColumnDefinition Width="2*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{Binding ListName}"
+                                <Label Text="{Binding Container.GenericName}"
                                        HorizontalOptions="Start"
                                        VerticalOptions="CenterAndExpand" />
-                                <Entry Text="{Binding Name}"
-                                       Placeholder="Name"
-                                       Grid.Column="1"/>
+                                <Picker x:Name="largePicker"
+                                        ItemsSource="{Binding BindingContext.LargeIngredients, Source={x:Reference configurePage}}"
+                                        ItemDisplayBinding="{Binding ProductName}"
+                                        SelectedIndex="{Binding ID}"
+                                        IsVisible="{Binding Container.IsLarge}"
+                                        Grid.Column="1"/>
+                                <Picker x:Name="smallPicker"
+                                        ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
+                                        ItemDisplayBinding="{Binding ProductName}"
+                                        SelectedIndex="{Binding ID}"
+                                        IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
+                                        Grid.Column="1"/>
                                 <Entry Text="{Binding Amount, StringFormat='{0:0.0}'}"
                                        Placeholder="Amount"
                                        HorizontalOptions="Center"

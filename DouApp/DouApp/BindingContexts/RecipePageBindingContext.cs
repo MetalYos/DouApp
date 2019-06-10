@@ -25,10 +25,10 @@ namespace DouApp.BindingContexts
         private List<string> SetContainerNames()
         {
             List<string> names = new List<string>();
-            List<Container> containers = App.Database.GetContainers();
+            List<Container> containers = App.Containers.GetContainers();
             foreach (var container in containers)
             {
-                names.Add(container.Name);
+                names.Add(container.Ingredient.ProductName);
             }
             return names;
         }

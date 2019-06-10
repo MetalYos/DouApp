@@ -12,9 +12,6 @@ namespace DouApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LoginPage : ContentPage
     {
-        private string mockUsername = "User";
-        private string mockPassword = "1234";
-
         public LoginPage()
         {
             InitializeComponent();

@@ -37,7 +37,7 @@ namespace DouApp
 
             // Show stats
             containersAmountListView.ItemsSource = null;
-            containersAmountListView.ItemsSource = App.Database.GetContainers();
+            containersAmountListView.ItemsSource = App.Containers.GetContainers();
         }
 
         async private void NewRecipeButton_Clicked(object sender, EventArgs e)
@@ -71,7 +71,8 @@ namespace DouApp
         {
             await Navigation.PushAsync(new ConfigurePage
             {
-                FirstTime = false
+                FirstTime = false,
+                BindingContext = new ConfigurePageController()
             });
         }
     }

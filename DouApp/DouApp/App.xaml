@@ -6,5 +6,10 @@
     <Application.Resources>
         <x:String x:Key="formatDate">{0:d}</x:String>
         <local:NegateBooleanConverter x:Key="boolInverter"/>
+        <x:String x:Key="PageBackgroundColor">#002060</x:String>
+        <Style x:Key="pageStyle" TargetType="ContentPage">
+            <Setter Property="BackgroundColor" Value="{StaticResource PageBackgroundColor}" />
+        </Style>
+        <Style BasedOn="{StaticResource pageStyle}" TargetType="ContentPage" ApplyToDerivedTypes="True" />
     </Application.Resources>
 </Application>

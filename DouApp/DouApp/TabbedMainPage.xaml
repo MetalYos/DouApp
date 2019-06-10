@@ -7,42 +7,60 @@
              android:TabbedPage.ToolbarPlacement="Bottom" 
     -->
   <!--Pages can be added as references or inline-->
-    <ContentPage Title="Main">
-        <StackLayout Margin="20,35,20,20">
-            <!-- Show last 3 recepies if they exist -->
-            <Label Text="Latest Recepies"
+    <ContentPage Title="Main" Icon="">
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+            <StackLayout BackgroundColor="#002670"
+                         Padding="20,20,20,20">
+                <!-- Show last 3 recepies if they exist -->
+                <Label Text="Latest Recepies"
                    HorizontalOptions="StartAndExpand"
                    VerticalOptions="Center"
-                   FontSize="Medium"/>
-            <ListView x:Name="recipesListView"
+                   FontSize="Large"
+                   TextColor="White" />
+                <ListView x:Name="recipesListView"
                       ItemSelected="RecipesListView_ItemSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}"
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Name}"
                                        HorizontalOptions="StartAndExpand"
-                                       VerticalOptions="Center"/>
-                                <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
+                                       VerticalOptions="Center"
+                                       TextColor="White" />
+                                    <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
                                        HorizontalOptions="End"
-                                       VerticalOptions="Center" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <!-- New Recepie Button -->
-            <Button x:Name="newRecipeButton"
+                                       VerticalOptions="Center"
+                                       TextColor="White"/>
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- New Recepie Button -->
+                <Button x:Name="newRecipeButton"
                     Text="New Recipe"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="NewRecipeButton_Clicked" />
-            <!-- Download Recepie (Maybe) -->
-            <Button x:Name="downloadRecipeButton"
+                <!-- Download Recepie (Maybe) -->
+                <Button x:Name="downloadRecipeButton"
                     Text="Download Recipe"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="DownloadRecipeButton_Clicked" />
+            </StackLayout>
         </StackLayout>
     </ContentPage>
     <ContentPage Title="Stats">

@@ -56,9 +56,9 @@ namespace DouApp
             {
                 if (item.Container.IsLarge)
                 {
-                    if (!App.Database.RemoveFromContainer(item.Container.ID, item.Weight))
+                    if (!App.Containers.RemoveFromContainer(item.Container.ID, item.Weight))
                     {
-                        await DisplayAlert("Error!", "Not enough content in " + item.Container.Name + " container to bake!\n"
+                        await DisplayAlert("Error!", "Not enough content in " + item.Container.Ingredient.ProductName + " container to bake!\n"
                             + "Please fill in " + (item.Weight - item.Container.Amount).ToString() + " grams.", "Ok");
                         await Navigation.PopAsync();
                     }
@@ -71,7 +71,7 @@ namespace DouApp
         private void AddIngredientButton_Clicked(object sender, EventArgs e)
         {
             Station station = new Station();
-            station.SetLargeContainer(App.Database.GetContainer(0), 500.0);
+            station.SetLargeContainer(App.Containers.GetContainer(1), 500.0);
             (BindingContext as RecipePageBindingContext).PageRecipe.Stations.Add(station);
         }
 
@@ -79,7 +79,7 @@ namespace DouApp
         {
             var picker = (Picker)sender;
             int selectedIndex = picker.SelectedIndex;
-            Container container = App.Database.GetContainer(selectedIndex);
+            Container container = App.Containers.GetContainer(selectedIndex + 1);
             Station station = ((picker.Parent as Grid).Parent as ViewCell).BindingContext as Station;
             var stations = (BindingContext as RecipePageBindingContext).PageRecipe.Stations;
 

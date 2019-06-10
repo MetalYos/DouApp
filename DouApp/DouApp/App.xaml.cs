@@ -28,6 +28,9 @@ namespace DouApp
         // Databases
         static MockData database = null;
         static UsersDatabase userDatabase = null;
+        static RecipesDatabase recipesDatabase = null;
+        static IngredientsDatabase ingredientsDatabase = null;
+        static ContainersDatabase containersDatabase = null;
 
         public static MockData Database
         {
@@ -53,11 +56,50 @@ namespace DouApp
             }
         }
 
+        public static RecipesDatabase RecipesDB
+        {
+            get
+            {
+                if (recipesDatabase == null)
+                {
+                    recipesDatabase = new RecipesDatabase();
+                }
+                return recipesDatabase;
+            }
+        }
+
+        public static IngredientsDatabase Ingredients
+        {
+            get
+            {
+                if (ingredientsDatabase == null)
+                {
+                    ingredientsDatabase = new IngredientsDatabase();
+                }
+                return ingredientsDatabase;
+            }
+        }
+
+        public static ContainersDatabase Containers
+        {
+            get
+            {
+                if (containersDatabase == null)
+                {
+                    containersDatabase = new ContainersDatabase();
+                }
+                return containersDatabase;
+            }
+        }
+
         public App()
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new LoginPage());
+            MainPage = new NavigationPage(new LoginPage())
+            {
+                BarTextColor = Color.FromHex("#002060")
+            };
         }
 
         protected override void OnStart()

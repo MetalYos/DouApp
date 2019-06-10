@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using DouApp.Models;
+using DouApp.BindingContexts;
 
 namespace DouApp
 {
@@ -21,6 +22,7 @@ namespace DouApp
 
         private void RegisterButton_Clicked(object sender, EventArgs e)
         {
+            /*  For now (no need to add a new user to the database each time)
             string username = usernameEntry.Text;
             string email = emailEntry.Text;
             string password = passwordEntry.Text;
@@ -64,8 +66,10 @@ namespace DouApp
             }
 
             App.UserID = id;
+            */
             Navigation.PushAsync(new ConfigurePage
             {
+                BindingContext = new ConfigurePageController(),
                 FirstTime = true
             });
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+
 using DouApp.Models;
 
 namespace DouApp
@@ -39,44 +40,6 @@ namespace DouApp
         }
     }
 
-    public class Container
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public double Amount { get; set; }
-        public bool IsLarge { get; set; }
-        public string ListName { get; set; }
-
-        public Container()
-        {
-            ID = 0;
-            Name = "";
-            Amount = 0.0;
-            IsLarge = true;
-
-            string size = "Large";
-            if (!IsLarge) size = "Small";
-            ListName = "Container " + (ID + 1).ToString() + " (" + size + ")";
-        }
-
-        public Container(int id, string name, double amount, bool isLarge)
-        {
-            ID = id;
-            Name = name;
-            Amount = amount;
-            IsLarge = isLarge;
-
-            string size = "Large";
-            if (!IsLarge) size = "Small";
-            ListName = "Container " + (ID + 1).ToString() + " (" + size + ")";
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
-
     public class MockData
     {
         private List<Recipe> recipes;
@@ -86,57 +49,7 @@ namespace DouApp
         {
             recipes = new List<Recipe>();
             containers = new List<Container>();
-            PopulateContainers();
             PopulateRecipes();
-        }
-
-        private void PopulateContainers()
-        {
-            /*
-            containers.Add(new Container(0, "Flour", 750, true));
-            containers.Add(new Container(1, "Sugar", 500, true));
-            containers.Add(new Container(2, "Baking Powder", 750, true));
-            containers.Add(new Container(3, "Cinnamon", 25, false));
-            containers.Add(new Container(4, "Other", 45, false));
-            containers.Add(new Container(5, "Other2", 30, false));
-            */
-            containers.Add(new Container(0, "Large1", 500, true));
-            containers.Add(new Container(1, "Large2", 500, true));
-            containers.Add(new Container(2, "Large3", 500, true));
-            containers.Add(new Container(3, "Small1", 50, false));
-            containers.Add(new Container(4, "Small2", 50, false));
-            containers.Add(new Container(5, "Small3", 50, false));
-        }
-
-        public List<Container> GetContainers()
-        {
-            return containers;
-        }
-
-        public Container GetContainer(int id)
-        {
-            if (id >= 0 && id < containers.Count)
-                return containers[id];
-            return null;
-        }
-
-        public void UpdateContainerAmount(int id, double amount)
-        {
-            containers[id].Amount = amount;
-        }
-
-        public bool RemoveFromContainer(int id, double amountToRemove)
-        {
-            if (containers[id].Amount - amountToRemove < 0)
-                return false;
-
-            containers[id].Amount -= amountToRemove;
-            return true;
-        }
-
-        public void UpdateContainerName(int id, string name)
-        {
-            containers[id].Name = name;
         }
 
         private void PopulateRecipes()
@@ -144,19 +57,19 @@ namespace DouApp
             // Recipe 1
             ObservableCollection<Station> stations = new ObservableCollection<Station>();
             Station station = new Station();
-            station.SetLargeContainer(GetContainer(0), 500);
+            station.SetLargeContainer(App.Containers.GetContainer(1), 500);
             stations.Add(station);
 
             station = new Station();
-            station.SetLargeContainer(GetContainer(1), 200);
+            station.SetLargeContainer(App.Containers.GetContainer(2), 200);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(3), (int)Spoons.Half);
+            station.SetSmallContainer(App.Containers.GetContainer(4), (int)Spoons.Half);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(5), (int)Spoons.Quarter);
+            station.SetSmallContainer(App.Containers.GetContainer(6), (int)Spoons.Quarter);
             stations.Add(station);
 
             AddRecipe("Cupcake", stations);
@@ -164,23 +77,23 @@ namespace DouApp
             // Recipe 2
             stations = new ObservableCollection<Station>();
             station = new Station();
-            station.SetLargeContainer(GetContainer(2), 500);
+            station.SetLargeContainer(App.Containers.GetContainer(3), 500);
             stations.Add(station);
 
             station = new Station();
-            station.SetLargeContainer(GetContainer(1), 400);
+            station.SetLargeContainer(App.Containers.GetContainer(2), 400);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(3), (int)Spoons.Half);
+            station.SetSmallContainer(App.Containers.GetContainer(4), (int)Spoons.Half);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(4), (int)Spoons.Full);
+            station.SetSmallContainer(App.Containers.GetContainer(5), (int)Spoons.Full);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(5), (int)Spoons.Quarter);
+            station.SetSmallContainer(App.Containers.GetContainer(6), (int)Spoons.Quarter);
             stations.Add(station);
 
             AddRecipe("Brownie", stations);
@@ -188,19 +101,19 @@ namespace DouApp
             // Recipe 3
             stations = new ObservableCollection<Station>();
             station = new Station();
-            station.SetLargeContainer(GetContainer(1), 300);
+            station.SetLargeContainer(App.Containers.GetContainer(2), 300);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(4), (int)Spoons.Half);
+            station.SetSmallContainer(App.Containers.GetContainer(5), (int)Spoons.Half);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(3), (int)Spoons.Full);
+            station.SetSmallContainer(App.Containers.GetContainer(4), (int)Spoons.Full);
             stations.Add(station);
 
             station = new Station();
-            station.SetSmallContainer(GetContainer(5), (int)Spoons.Half);
+            station.SetSmallContainer(App.Containers.GetContainer(6), (int)Spoons.Half);
             stations.Add(station);
 
             AddRecipe("Chocolate", stations);
@@ -208,7 +121,7 @@ namespace DouApp
             // Recipe 4
             stations = new ObservableCollection<Station>();
             station = new Station();
-            station.SetLargeContainer(GetContainer(0), 700);
+            station.SetLargeContainer(App.Containers.GetContainer(1), 700);
             stations.Add(station);
 
             AddRecipe("Flour", stations);

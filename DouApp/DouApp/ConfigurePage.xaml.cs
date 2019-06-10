@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using DouApp.BindingContexts;
+
 namespace DouApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -22,12 +24,15 @@ namespace DouApp
         {
             base.OnAppearing();
 
-            containersListView.ItemsSource = App.Database.GetContainers();
+            containersListView.ItemsSource = (BindingContext as ConfigurePageController).Containers;
             cancelContainersButton.IsVisible = !FirstTime;
         }
 
         private void SaveContainersButton_Clicked(object sender, EventArgs e)
         {
+            // update containers with ingredients
+            (BindingContext as ConfigurePageController).UpdateContainers();
+
             App.Current.MainPage = new NavigationPage(new TabbedMainPage());
         }
 

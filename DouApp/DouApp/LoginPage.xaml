@@ -3,17 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DouApp.LoginPage">
     <ContentPage.Content>
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="Welcome to Dou!"
-                   FontSize="Medium"
-                   VerticalOptions="CenterAndExpand" 
-                   HorizontalOptions="CenterAndExpand" />
+        <StackLayout Margin="20,35,20,20"
+                     BackgroundColor="#002060">
             <Image Source="Logo.png" HeightRequest="200"/>
             <Entry x:Name="usernameEntry"
-                   Placeholder="Enter Username" />
+                   Placeholder="Enter Username"
+                   PlaceholderColor="#CCCCCC"
+                   TextColor="#CCCCCC" />
             <Entry x:Name="passwordEntry"
                    Placeholder="Enter Password"
-                   IsPassword="True" />
+                   IsPassword="True"
+                   PlaceholderColor="#CCCCCC" />
             <Label HorizontalOptions="Center"
                    VerticalOptions="StartAndExpand">
                 <Label.FormattedText>
@@ -32,11 +32,19 @@
                     Text="Login"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="LoginButton_Clicked"/>
             <Button x:Name="signUpButton"
                     Text="Sign Up"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="SignUpButton_Clicked"/>
         </StackLayout>
     </ContentPage.Content>
