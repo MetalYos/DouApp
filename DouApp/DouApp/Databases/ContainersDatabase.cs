@@ -13,12 +13,12 @@ namespace DouApp.Databases
         public ContainersDatabase()
         {
             containers = new List<Container>();
-            containers.Add(new Container(1, App.Ingredients.GetIngredient("Flour"), 0.0, true));
-            containers.Add(new Container(2, App.Ingredients.GetIngredient("White Sugar"), 0.0, true));
-            containers.Add(new Container(3, App.Ingredients.GetIngredient("Almonds"), 0.0, true));
+            containers.Add(new Container(1, App.Ingredients.GetIngredient("Cornflour"), 0.0, true));
+            containers.Add(new Container(2, App.Ingredients.GetIngredient("Flour"), 0.0, true));
+            containers.Add(new Container(3, App.Ingredients.GetIngredient("Poppyseed"), 0.0, true));
             containers.Add(new Container(4, App.Ingredients.GetIngredient("Salt"), 0.0, false));
             containers.Add(new Container(5, App.Ingredients.GetIngredient("Yeast"), 0.0, false));
-            containers.Add(new Container(6, App.Ingredients.GetIngredient("Cinnamon"), 0.0, false));
+            containers.Add(new Container(6, App.Ingredients.GetIngredient("Soda Powder"), 0.0, false));
         }
 
         public Container GetContainer(int id)

@@ -28,12 +28,28 @@ namespace DouApp
             cancelContainersButton.IsVisible = !FirstTime;
         }
 
-        private void SaveContainersButton_Clicked(object sender, EventArgs e)
+        private async void SaveContainersButton_Clicked(object sender, EventArgs e)
         {
             // update containers with ingredients
             (BindingContext as ConfigurePageController).UpdateContainers();
 
-            App.Current.MainPage = new NavigationPage(new TabbedMainPage());
+            // Create a new main page
+            var tabbedPage = new TabbedMainPage()
+            {
+                BarBackgroundColor = Color.FromHex("#002060")
+            };
+
+            if (FirstTime)
+            {
+                App.Current.MainPage = new NavigationPage(tabbedPage)
+                {
+                    BarBackgroundColor = Color.FromHex("#002060")
+                };
+            }
+            else
+            {
+                await Navigation.PopAsync();
+            }
         }
 
         private async void CancelContainersButton_Clicked(object sender, EventArgs e)

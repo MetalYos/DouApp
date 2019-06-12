@@ -9,15 +9,18 @@ using Xamarin.Forms.Xaml;
 
 using DouApp.Models;
 using DouApp.BindingContexts;
+using DouApp.Databases;
 
 namespace DouApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TabbedMainPage : TabbedPage
     {
+        private List<UserRecipe> recipes;
         public TabbedMainPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         protected override void OnAppearing()
@@ -25,11 +28,11 @@ namespace DouApp
             base.OnAppearing();
 
             // Show 3 latest recipes
-            var recipes = App.Database.GetRecipes();
-            recipes.Sort(new RecipeComparer());
+            recipes = App.RecipesDB.GetRecipesMock();
+            recipes.Sort(new UserRecipeComparer());
             recipes.Reverse();
             recipesListView.ItemsSource = null;
-            recipesListView.ItemsSource = recipes.GetRange(0, 3);
+            recipesListView.ItemsSource = recipes.GetRange(0, Math.Min(3, recipes.Count));
 
             // Show all recipes
             recipesHistoryListView.ItemsSource = null;
@@ -43,8 +46,8 @@ namespace DouApp
         async private void NewRecipeButton_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new RecipePage
-                {
-                BindingContext = new RecipePageBindingContext(new Recipe()),
+            {
+                BindingContext = new RecipePageController(new UserRecipe()),
                 IsNew = true
             });
         }
@@ -58,10 +61,17 @@ namespace DouApp
         {
             if (e.SelectedItem != null)
             {
-
+                // Check first if it is compatitable to the current configuration
+                UserRecipe recipe = (e.SelectedItem as UserRecipe);
+                if (!CheckIfRecipeIsPossible(recipe))
+                {
+                    await DisplayAlert("Recipe not supported", "Current machine configuration does not support selected recipe", "OK");
+                    return;
+                }
+                
                 await Navigation.PushAsync(new RecipePage
                 {
-                    BindingContext = new RecipePageBindingContext(e.SelectedItem as Recipe),
+                    BindingContext = new RecipePageController(recipe),
                     IsNew = false
                 });
             }
@@ -71,9 +81,39 @@ namespace DouApp
         {
             await Navigation.PushAsync(new ConfigurePage
             {
-                FirstTime = false,
-                BindingContext = new ConfigurePageController()
+                BindingContext = new ConfigurePageController(),
+                FirstTime = false
             });
+        }
+
+        private bool CheckIfRecipeIsPossible(UserRecipe recipe)
+        {
+            bool possible = true;
+            var containers = App.Containers.GetContainers();
+
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient1);
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient2);
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient3);
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient4);
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient5);
+            possible = possible && CheckIngredientInContainers(containers, recipe.Ingridient6);
+
+            return possible;
+        }
+
+        private bool CheckIngredientInContainers(List<Container> containers, string ingredientName)
+        {
+            bool ingredientIn = false;
+            foreach (var container in containers)
+            {
+                if (container.Ingredient.ProductName == ingredientName)
+                {
+                    ingredientIn = true;
+                    break;
+                }
+            }
+
+            return ingredientIn;
         }
     }
 }

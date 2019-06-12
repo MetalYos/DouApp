@@ -98,7 +98,7 @@ namespace DouApp
 
             MainPage = new NavigationPage(new LoginPage())
             {
-                BarTextColor = Color.FromHex("#002060")
+                BarBackgroundColor = Color.FromHex("#002060")
             };
         }
 

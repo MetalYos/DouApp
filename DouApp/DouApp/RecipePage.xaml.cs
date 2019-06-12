@@ -27,7 +27,12 @@ namespace DouApp
             base.OnAppearing();
 
             if (BindingContext != null)
-                ingredientsListView.ItemsSource = (BindingContext as RecipePageBindingContext).PageRecipe.Stations;
+            {
+                if (IsNew)
+                    (BindingContext as RecipePageController).InitNewUserRecipe();
+
+                ingredientsListView.ItemsSource = (BindingContext as RecipePageController).Ingredients;
+            }
         }
 
         async private void BakeRecipeButton_Clicked(object sender, EventArgs e)
@@ -38,6 +43,7 @@ namespace DouApp
                 return;
             }
 
+            /*
             Recipe recipe = (BindingContext as RecipePageBindingContext).PageRecipe;
             if (recipe == null)
             {
@@ -64,19 +70,23 @@ namespace DouApp
                     }
                 }
             }
+            */
 
             await Navigation.PopAsync();
         }
 
         private void AddIngredientButton_Clicked(object sender, EventArgs e)
         {
+            /*
             Station station = new Station();
             station.SetLargeContainer(App.Containers.GetContainer(1), 500.0);
             (BindingContext as RecipePageBindingContext).PageRecipe.Stations.Add(station);
+            */
         }
 
         private void ContainerPicker_SelectedIndexChanged(object sender, EventArgs e)
         {
+            /*
             var picker = (Picker)sender;
             int selectedIndex = picker.SelectedIndex;
             Container container = App.Containers.GetContainer(selectedIndex + 1);
@@ -92,13 +102,16 @@ namespace DouApp
                 station.Container = container;
                 stations[index] = station;
             }
+            */
         }
 
         private void RemoveStationButton_Clicked(object sender, EventArgs e)
         {
+            /*
             var button = (Button)sender;
             Station station = ((button.Parent as Grid).Parent as ViewCell).BindingContext as Station;
             (BindingContext as RecipePageBindingContext).PageRecipe.Stations.Remove(station);
+            */
         }
     }
 }

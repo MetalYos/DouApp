@@ -10,6 +10,7 @@ namespace DouApp.BindingContexts
     {
         public Container Container { get; set; }
         public int ID { get; set; }
+        public double Amount { get; set; }
     }
 
     public class ConfigurePageController
@@ -31,7 +32,8 @@ namespace DouApp.BindingContexts
                 Containers.Add(new ContainerAndID
                 {
                     Container = container,
-                    ID = id
+                    ID = id,
+                    Amount = container.Amount
                 });
             }
         }
@@ -44,10 +46,12 @@ namespace DouApp.BindingContexts
                 if (!Containers[i].Container.IsLarge)
                     id += LargeIngredients.Count;
 
-                if (Containers[i].Container.Ingredient.ID == id)
-                    continue;
-
-                App.Containers.UpdateContainerIngredient(i + 1, App.Ingredients.GetIngredient(id));
+                // Update Containers with new ingredients (if they were changed)
+                if (Containers[i].Container.Ingredient.ID != id)
+                    App.Containers.UpdateContainerIngredient(i + 1, App.Ingredients.GetIngredient(id));
+                // Update Containers with new amount (if they were changed)
+                if (Containers[i].Container.Amount != Containers[i].Amount)
+                    App.Containers.UpdateContainerAmount(i + 1, Containers[i].Amount);
             }
         }
     }

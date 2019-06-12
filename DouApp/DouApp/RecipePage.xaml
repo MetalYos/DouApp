@@ -1,79 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DouApp.CustomControls;assembly=DouApp"
              x:Name="recipePage"
              x:Class="DouApp.RecipePage">
     <ContentPage.Content>
-        <StackLayout Margin="20,35,20,20">
-            <Entry x:Name="recipeNameEntry"
-                   Placeholder="Name"
-                   Text="{Binding PageRecipe.Name}"/>
-            <Label HeightRequest="40"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="CenterAndExpand" />
-            <Label Text="Recipe Ingredients"
-                   HorizontalOptions="StartAndExpand"
-                   VerticalOptions="Center"
-                   FontSize="Medium" />
-            <!-- Containers -->
-            <ListView x:Name="ingredientsListView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*" />
-                                    <ColumnDefinition Width="3*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Picker x:Name="containerPicker"
-                                        Title="Ingredient"
-                                        ItemsSource="{Binding BindingContext.ContainerNames, Source={x:Reference recipePage}}"
-                                        SelectedIndex="{Binding Container.ID, Mode=OneTime}"
-                                        SelectedIndexChanged="ContainerPicker_SelectedIndexChanged"
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+            <StackLayout BackgroundColor="#002670"
+                         Padding="20,20,20,20">
+                <local:MyEntry x:Name="recipeNameEntry"
+                               Placeholder="Name"
+                               Text="{Binding Recipe.RecipeName}"
+                               PlaceholderColor="White"
+                               TextColor="White"
+                               LineColor="White"/>
+                <Label HeightRequest="10"
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="CenterAndExpand" />
+                <Label Text="Recipe Ingredients"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center"
+                       FontSize="Medium"
+                       TextColor="White" />
+                <!-- Containers -->
+                <ListView x:Name="ingredientsListView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label x:Name="containerLabel"
+                                        Text="{Binding ProductName}"
+                                        VerticalOptions="CenterAndExpand" 
+                                        HorizontalOptions="StartAndExpand"
+                                        TextColor="White"
                                         Grid.Column="0" />
-                                <Entry Text="{Binding Weight, StringFormat='{0:0.0}'}"
-                                       Placeholder="Weight"
-                                       IsVisible="{Binding Container.IsLarge}"
+                                    <Entry Text="{Binding Amount, StringFormat='{0:0.0}'}"
+                                       Placeholder="Amount"
+                                       TextColor="White"
                                        Grid.Column="1"/>
-                                <Picker x:Name="spoonPicker"
-                                        Title="Spoon amount"
-                                        SelectedIndex="{Binding Spoon}"
-                                        IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
-                                        Grid.Column="1">
-                                    <Picker.ItemsSource>
-                                        <x:Array Type="{x:Type x:String}">
-                                            <x:String>Quarter Spoon</x:String>
-                                            <x:String>Half Spoon</x:String>
-                                            <x:String>Full Spoon</x:String>
-                                        </x:Array>
-                                    </Picker.ItemsSource>
-                                </Picker>
-                                <Button x:Name="removeStationButton"
-                                        Text="X"
-                                        TextColor="Red"
-                                        FontSize="Large"
+                                    <Picker x:Name="unitsPicker"
+                                        Title="Unit"
+                                        TextColor="White"
                                         Grid.Column="2"
-                                        Clicked="RemoveStationButton_Clicked"/>
-                            </Grid>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            <!-- Add Ingredient Button -->
-            <Button x:Name="addIngredientButton"
-                    Text="Add Ingredient"
+                                        SelectedIndex="{Binding UnitsIndex}">
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>gr</x:String>
+                                                <x:String>Cups</x:String>
+                                                <x:String>Tsp</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </Picker>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- Add Ingredient Button -->
+                <Button x:Name="addIngredientButton"
+                    Text="Save Recipe"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="AddIngredientButton_Clicked" />
-            <!-- Bake Button -->
-            <Button x:Name="bakeRecipeButton"
-                    Text="Bake!"
+                <!-- Bake Button -->
+                <Button x:Name="bakeRecipeButton"
+                    Text="Let's D'oH!"
                     BorderWidth="2"
                     BorderRadius="10"
                     BackgroundColor="ForestGreen"
-                    TextColor="Black"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="BakeRecipeButton_Clicked" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -15,6 +15,7 @@ namespace DouApp
         public LoginPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         public ICommand ClickCommand => new Command<string>((url) =>
@@ -40,7 +41,18 @@ namespace DouApp
             }
 
             App.UserID = id;
-            Navigation.PushAsync(new TabbedMainPage());
+            //App.UserID = 5;
+
+            //Navigation.PushAsync(new TabbedMainPage());
+            var tabbedPage = new TabbedMainPage()
+            {
+                BarBackgroundColor = Color.FromHex("#002060")
+            };
+            var page = new NavigationPage(tabbedPage)
+            {
+                BarBackgroundColor = Color.FromHex("#002060")
+            };
+            Application.Current.MainPage = page;
         }
     }
 }

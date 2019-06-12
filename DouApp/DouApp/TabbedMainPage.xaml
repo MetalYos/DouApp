@@ -2,11 +2,7 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="DouApp.TabbedMainPage">
-    <!--
-             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
-             android:TabbedPage.ToolbarPlacement="Bottom" 
-    -->
-  <!--Pages can be added as references or inline-->
+    <!--Pages can be added as references or inline-->
     <ContentPage Title="Main" Icon="">
         <StackLayout HorizontalOptions="FillAndExpand"
                      VerticalOptions="FillAndExpand"
@@ -27,11 +23,11 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Name}"
+                                    <Label Text="{Binding RecipeName}"
                                        HorizontalOptions="StartAndExpand"
                                        VerticalOptions="Center"
                                        TextColor="White" />
-                                    <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
+                                    <Label Text="{Binding LastUse, StringFormat={StaticResource formatDate}}"
                                        HorizontalOptions="End"
                                        VerticalOptions="Center"
                                        TextColor="White"/>
@@ -64,67 +60,103 @@
         </StackLayout>
     </ContentPage>
     <ContentPage Title="Stats">
-        <!-- Show how much is left in each container -->
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="Amount left in each container"
-                   HorizontalOptions="StartAndExpand"
-                   VerticalOptions="Center"
-                   FontSize="Large"/>
-            <ListView x:Name="containersAmountListView">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}"
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+                <StackLayout BackgroundColor="#002670"
+                             Padding="20,20,20,20">
+                    <!-- Show how much is left in each container -->
+                <Label Text="Amount left in each container"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center"
+                       FontSize="Large"
+                       TextColor="White"/>
+                <ListView x:Name="containersAmountListView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding Ingredient.ProductName}"
                                            HorizontalOptions="StartAndExpand"
-                                           VerticalOptions="Center"/>
-                                <Label Text="{Binding Amount}"
+                                           VerticalOptions="Center"
+                                           TextColor="White"/>
+                                    <Label Text="{Binding Amount}"
                                            HorizontalOptions="End"
-                                           VerticalOptions="Center" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackLayout>
+                                           VerticalOptions="Center"
+                                           TextColor="White" />
+                                    <Label Text="gr"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center"
+                                           TextColor="White" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+       </StackLayout>
     </ContentPage>
     <ContentPage Title="History">
         <!-- Show use history -->
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="Recipes History"
-                   HorizontalOptions="StartAndExpand"
-                   VerticalOptions="Center"
-                   FontSize="Large"/>
-            <ListView x:Name="recipesHistoryListView"
-                      ItemSelected="RecipesListView_ItemSelected">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}"
-                                           HorizontalOptions="StartAndExpand"
-                                           VerticalOptions="Center"/>
-                                <Label Text="{Binding Date, StringFormat={StaticResource formatDate}}"
-                                           HorizontalOptions="End"
-                                           VerticalOptions="Center" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+                <StackLayout BackgroundColor="#002670"
+                             Padding="20,20,20,20">
+                <Label Text="Recipes History"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center"
+                       FontSize="Large"
+                       TextColor="White" />
+                <ListView x:Name="recipesHistoryListView"
+                          ItemSelected="RecipesListView_ItemSelected">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="{Binding RecipeName}"
+                                               HorizontalOptions="StartAndExpand"
+                                               VerticalOptions="Center"
+                                               TextColor="White" />
+                                    <Label Text="{Binding LastUse, StringFormat={StaticResource formatDate}}"
+                                               HorizontalOptions="End"
+                                               VerticalOptions="Center"
+                                               TextColor="White" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
         </StackLayout>
     </ContentPage>
     <ContentPage Title="Settings">
-        <StackLayout Margin="20,35,20,20">
-            <Label Text="Application Settings"
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+            <StackLayout BackgroundColor="#002670"
+                             Padding="20,20,20,20">
+                <Label Text="Application Settings"
                    HorizontalOptions="CenterAndExpand"
                    VerticalOptions="CenterAndExpand"
-                   FontSize="Large" />
-            <Button x:Name="configureContainersButton" 
+                   FontSize="Large"
+                   TextColor="White" />
+                <Button x:Name="configureContainersButton" 
                     Text="Configure Containers"
                     BorderWidth="2"
                     BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
                     Clicked="ConfigureContainersButton_Clicked" />
+            </StackLayout>
         </StackLayout>
     </ContentPage>
 </TabbedPage>

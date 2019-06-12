@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace DouApp.CustomControls
 {
-    public class MyEntry : Entry
+    public class MyPicker : Picker
     {
         public Color LineColor { get; set; }
     }
