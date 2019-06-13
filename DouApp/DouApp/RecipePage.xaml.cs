@@ -15,8 +15,6 @@ namespace DouApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RecipePage : ContentPage
     {
-        public bool IsNew { get; set; }
-
         public RecipePage()
         {
             InitializeComponent();
@@ -28,90 +26,50 @@ namespace DouApp
 
             if (BindingContext != null)
             {
-                if (IsNew)
-                    (BindingContext as RecipePageController).InitNewUserRecipe();
-
                 ingredientsListView.ItemsSource = (BindingContext as RecipePageController).Ingredients;
             }
         }
 
-        async private void BakeRecipeButton_Clicked(object sender, EventArgs e)
+        async private void LetsDohRecipeButton_Clicked(object sender, EventArgs e)
         {
+            var controller = BindingContext as RecipePageController;
+
             if (recipeNameEntry.Text == string.Empty)
             {
                 await DisplayAlert("Error!", "Please enter a name before baking!", "Ok");
                 return;
             }
 
-            /*
-            Recipe recipe = (BindingContext as RecipePageBindingContext).PageRecipe;
-            if (recipe == null)
+            var ingredientsToFill = controller.CheckIfPossible();
+            if (ingredientsToFill.Count > 0)
             {
-                await DisplayAlert("Error!", "Recipe is NULL!", "Ok");
+                string message = "";
+                foreach (var ingredient in ingredientsToFill)
+                {
+                    message += "Not enough content in " + ingredient.ProductName + " container to make doh!\n"
+                            + "Please fill in " + (ingredient.AmountToFill).ToString() + " grams.\n";
+                }
+                await DisplayAlert("Error!", message, "Ok");
+                await Navigation.PopAsync();
                 return;
             }
 
-            // Save Recipe
-            if (IsNew)
-                App.Database.AddRecipe(recipe);
-            else
-                App.Database.UpdateRecipe(recipe);
-
-            // Remove the baked amount from containers
-            foreach (var item in recipe.Stations)
-            {
-                if (item.Container.IsLarge)
-                {
-                    if (!App.Containers.RemoveFromContainer(item.Container.ID, item.Weight))
-                    {
-                        await DisplayAlert("Error!", "Not enough content in " + item.Container.Ingredient.ProductName + " container to bake!\n"
-                            + "Please fill in " + (item.Weight - item.Container.Amount).ToString() + " grams.", "Ok");
-                        await Navigation.PopAsync();
-                    }
-                }
-            }
-            */
+            // Execute command
+            controller.LetsDoh();
 
             await Navigation.PopAsync();
         }
 
-        private void AddIngredientButton_Clicked(object sender, EventArgs e)
+        async private void SaveRecipeButton_Clicked(object sender, EventArgs e)
         {
-            /*
-            Station station = new Station();
-            station.SetLargeContainer(App.Containers.GetContainer(1), 500.0);
-            (BindingContext as RecipePageBindingContext).PageRecipe.Stations.Add(station);
-            */
-        }
+            var controller = BindingContext as RecipePageController;
 
-        private void ContainerPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            /*
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-            Container container = App.Containers.GetContainer(selectedIndex + 1);
-            Station station = ((picker.Parent as Grid).Parent as ViewCell).BindingContext as Station;
-            var stations = (BindingContext as RecipePageBindingContext).PageRecipe.Stations;
-
-            if (station == null)
+            if (controller == null)
                 return;
 
-            if (station.Container.ID != container.ID)
-            {
-                int index = stations.IndexOf(station);
-                station.Container = container;
-                stations[index] = station;
-            }
-            */
-        }
+            controller.SaveRecipe();
 
-        private void RemoveStationButton_Clicked(object sender, EventArgs e)
-        {
-            /*
-            var button = (Button)sender;
-            Station station = ((button.Parent as Grid).Parent as ViewCell).BindingContext as Station;
-            (BindingContext as RecipePageBindingContext).PageRecipe.Stations.Remove(station);
-            */
+            await Navigation.PopAsync();
         }
     }
 }

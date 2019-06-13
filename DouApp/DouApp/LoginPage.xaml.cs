@@ -7,6 +7,8 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using DouApp.Interfaces;
+
 namespace DouApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -30,6 +32,7 @@ namespace DouApp
 
         private void LoginButton_Clicked(object sender, EventArgs e)
         {
+            /*
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;
             int id = App.Users.GetUserID(username, password);
@@ -41,9 +44,23 @@ namespace DouApp
             }
 
             App.UserID = id;
-            //App.UserID = 5;
 
-            //Navigation.PushAsync(new TabbedMainPage());
+            // Connect to Bluetooth
+            bool connected = DependencyService.Get<IBluetoothHelper>().Connect("Sharon").Result;
+            int count = 0;
+            while (!connected)
+            {
+                connected = DependencyService.Get<IBluetoothHelper>().Connect("Sharon").Result;
+                count++;
+                if (count == 10)
+                {
+                    DisplayAlert("Connection Error", "Can't connect to bluetooth!", "OK");
+                    return;
+                }
+            }
+            */
+
+            App.UserID = 5;
             var tabbedPage = new TabbedMainPage()
             {
                 BarBackgroundColor = Color.FromHex("#002060")

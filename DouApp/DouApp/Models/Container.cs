@@ -7,21 +7,21 @@ namespace DouApp.Models
     public class Container
     {
         public int ID { get; set; }
-        public Ingredient Ingredient { get; set; }
-        public double Amount { get; set; }
+        public string Ingredient { get; set; }
+        public decimal Amount { get; set; }
         public bool IsLarge { get; set; }
         public string GenericName { get; set; }
 
         public Container()
         {
             ID = 0;
-            Amount = 0.0;
+            Amount = 0;
             IsLarge = true;
 
             ConstructGenericName();
         }
 
-        public Container(int id, Ingredient ingredient, double amount, bool isLarge)
+        public Container(int id, string ingredient, decimal amount, bool isLarge)
         {
             ID = id;
             Ingredient = ingredient;
@@ -33,7 +33,7 @@ namespace DouApp.Models
 
         public override string ToString()
         {
-            return Ingredient.ProductName;
+            return Ingredient;
         }
 
         private void ConstructGenericName()

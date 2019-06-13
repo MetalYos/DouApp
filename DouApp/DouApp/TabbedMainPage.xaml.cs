@@ -10,17 +10,24 @@ using Xamarin.Forms.Xaml;
 using DouApp.Models;
 using DouApp.BindingContexts;
 using DouApp.Databases;
+using System.Collections.ObjectModel;
 
 namespace DouApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class TabbedMainPage : TabbedPage
     {
-        private List<UserRecipe> recipes;
+        private ObservableCollection<UserRecipe> recipes;
+        private ObservableCollection<UserRecipe> latestThreeRecipes;
         public TabbedMainPage()
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
+
+            recipes = App.RecipesDB.GetRecipesMock();
+            Helpers.Sort(recipes, (a, b) => { return b.LastUse.CompareTo(a.LastUse); });
+
+            latestThreeRecipes = new ObservableCollection<UserRecipe>();
         }
 
         protected override void OnAppearing()
@@ -28,15 +35,17 @@ namespace DouApp
             base.OnAppearing();
 
             // Show 3 latest recipes
-            recipes = App.RecipesDB.GetRecipesMock();
-            recipes.Sort(new UserRecipeComparer());
-            recipes.Reverse();
+            latestThreeRecipes.Clear();
             recipesListView.ItemsSource = null;
-            recipesListView.ItemsSource = recipes.GetRange(0, Math.Min(3, recipes.Count));
+            for (int i = 0; i < Math.Min(3, recipes.Count); i++)
+                latestThreeRecipes.Add(recipes[i]);
+            recipesListView.ItemsSource = latestThreeRecipes;
+            recipesListView.SelectedItem = null;
 
             // Show all recipes
             recipesHistoryListView.ItemsSource = null;
             recipesHistoryListView.ItemsSource = recipes;
+            recipesHistoryListView.SelectedItem = null;
 
             // Show stats
             containersAmountListView.ItemsSource = null;
@@ -47,8 +56,7 @@ namespace DouApp
         {
             await Navigation.PushAsync(new RecipePage
             {
-                BindingContext = new RecipePageController(new UserRecipe()),
-                IsNew = true
+                BindingContext = new RecipePageController(new UserRecipe(), true)
             });
         }
 
@@ -71,8 +79,7 @@ namespace DouApp
                 
                 await Navigation.PushAsync(new RecipePage
                 {
-                    BindingContext = new RecipePageController(recipe),
-                    IsNew = false
+                    BindingContext = new RecipePageController(recipe, false)
                 });
             }
         }
@@ -106,7 +113,7 @@ namespace DouApp
             bool ingredientIn = false;
             foreach (var container in containers)
             {
-                if (container.Ingredient.ProductName == ingredientName)
+                if (container.Ingredient == ingredientName)
                 {
                     ingredientIn = true;
                     break;

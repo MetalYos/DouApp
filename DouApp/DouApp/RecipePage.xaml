@@ -38,45 +38,41 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Label x:Name="containerLabel"
-                                        Text="{Binding ProductName}"
-                                        VerticalOptions="CenterAndExpand" 
-                                        HorizontalOptions="StartAndExpand"
-                                        TextColor="White"
-                                        Grid.Column="0" />
-                                    <Entry Text="{Binding Amount, StringFormat='{0:0.0}'}"
-                                       Placeholder="Amount"
-                                       TextColor="White"
-                                       Grid.Column="1"/>
-                                    <Picker x:Name="unitsPicker"
-                                        Title="Unit"
-                                        TextColor="White"
-                                        Grid.Column="2"
-                                        SelectedIndex="{Binding UnitsIndex}">
+                                           Text="{Binding ProductName}"
+                                           VerticalOptions="CenterAndExpand" 
+                                           HorizontalOptions="StartAndExpand"
+                                           TextColor="White"
+                                           Grid.Column="0" />
+                                    <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.0}'}"
+                                                   Placeholder="Amount"
+                                                   TextColor="White"
+                                                   Grid.Column="1"/>
+                                    <local:MyPicker Title="Unit"
+                                                    TextColor="White"
+                                                    Grid.Column="2"
+                                                    IsVisible="{Binding IsLarge}"
+                                                    SelectedIndex="{Binding UnitsIndex}">
                                         <Picker.ItemsSource>
                                             <x:Array Type="{x:Type x:String}">
                                                 <x:String>gr</x:String>
-                                                <x:String>Cups</x:String>
-                                                <x:String>Tsp</x:String>
+                                                <x:String>cups</x:String>
                                             </x:Array>
                                         </Picker.ItemsSource>
-                                    </Picker>
+                                    </local:MyPicker>
+                                    <local:MyEntry Text="tsp"
+                                                   VerticalOptions="CenterAndExpand" 
+                                                   HorizontalOptions="StartAndExpand"
+                                                   TextColor="White"
+                                                   IsReadOnly="True"
+                                                   IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
+                                                   Grid.Column="2" />
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
-                <!-- Add Ingredient Button -->
-                <Button x:Name="addIngredientButton"
-                    Text="Save Recipe"
-                    BorderWidth="2"
-                    BorderRadius="10"
-                    BackgroundColor="#169F9B"
-                    TextColor="White"
-                    WidthRequest="280"
-                    HorizontalOptions="Center"
-                    Clicked="AddIngredientButton_Clicked" />
-                <!-- Bake Button -->
-                <Button x:Name="bakeRecipeButton"
+                <!-- Let's D'oH! Button -->
+                <Button x:Name="letsDohRecipeButton"
                     Text="Let's D'oH!"
                     BorderWidth="2"
                     BorderRadius="10"
@@ -84,7 +80,16 @@
                     TextColor="White"
                     WidthRequest="280"
                     HorizontalOptions="Center"
-                    Clicked="BakeRecipeButton_Clicked" />
+                    Clicked="LetsDohRecipeButton_Clicked" />
+                <Button x:Name="saveRecipeButton"
+                    Text="Save Recipe"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
+                    Clicked="SaveRecipeButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

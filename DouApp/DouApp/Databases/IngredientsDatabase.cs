@@ -32,7 +32,6 @@ namespace DouApp.Databases
             ingredients.Add(new Ingredient("Coconut"));
             ingredients.Add(new Ingredient("Instant Pudding Vanila"));
             ingredients.Add(new Ingredient("Salt", "tsp"));
-            ingredients.Add(new Ingredient("Flour", "tsp"));
             ingredients.Add(new Ingredient("Baking Powder", "tsp"));
             ingredients.Add(new Ingredient("Soda Powder", "tsp"));
             ingredients.Add(new Ingredient("Yeast", "tsp"));
@@ -112,6 +111,21 @@ namespace DouApp.Databases
             }
 
             return -1;
+        }
+
+        public int GetIngredientInexBySize(string ingredientName, bool isLarge)
+        {
+            int index = GetIngredientIndex(ingredientName);
+            if (isLarge)
+                return index;
+
+            index -= GetIngredientsByType("gr").Count;
+            return index;
+        }
+
+        public decimal ConvertAmount(string ingredient, decimal amount, string type)
+        {
+            return 0;
         }
     }
 }

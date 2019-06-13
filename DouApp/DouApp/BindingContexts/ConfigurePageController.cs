@@ -9,8 +9,8 @@ namespace DouApp.BindingContexts
     public class ContainerAndID
     {
         public Container Container { get; set; }
-        public int ID { get; set; }
-        public double Amount { get; set; }
+        public int IngredientIndex { get; set; }
+        public decimal Amount { get; set; }
     }
 
     public class ConfigurePageController
@@ -28,11 +28,11 @@ namespace DouApp.BindingContexts
             Containers = new List<ContainerAndID>();
             foreach (var container in containers)
             {
-                int id = (container.IsLarge) ? container.Ingredient.ID : container.Ingredient.ID - LargeIngredients.Count;
+                int index = App.Ingredients.GetIngredientInexBySize(container.Ingredient, container.IsLarge);
                 Containers.Add(new ContainerAndID
                 {
                     Container = container,
-                    ID = id,
+                    IngredientIndex = index,
                     Amount = container.Amount
                 });
             }
@@ -42,17 +42,15 @@ namespace DouApp.BindingContexts
         {
             for (int i = 0; i < Containers.Count; i++)
             {
-                int id = Containers[i].ID;
+                int index = Containers[i].IngredientIndex;
                 if (!Containers[i].Container.IsLarge)
-                    id += LargeIngredients.Count;
+                    index += LargeIngredients.Count;
 
-                // Update Containers with new ingredients (if they were changed)
-                if (Containers[i].Container.Ingredient.ID != id)
-                    App.Containers.UpdateContainerIngredient(i + 1, App.Ingredients.GetIngredient(id));
-                // Update Containers with new amount (if they were changed)
-                if (Containers[i].Container.Amount != Containers[i].Amount)
-                    App.Containers.UpdateContainerAmount(i + 1, Containers[i].Amount);
+                App.Containers.UpdateContainerIngredient(i + 1, App.Ingredients.GetIngredient(index).ProductName);
+                App.Containers.UpdateContainerAmount(i + 1, Containers[i].Amount);
             }
+
+            App.Containers.SaveContainers();
         }
     }
 }

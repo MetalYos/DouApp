@@ -36,14 +36,14 @@
                                     <local:MyPicker x:Name="largePicker"
                                                     ItemsSource="{Binding BindingContext.LargeIngredients, Source={x:Reference configurePage}}"
                                                     ItemDisplayBinding="{Binding ProductName}"
-                                                    SelectedIndex="{Binding ID}"
+                                                    SelectedIndex="{Binding IngredientIndex}"
                                                     IsVisible="{Binding Container.IsLarge}"
                                                     Grid.Column="1"
                                                     TextColor="White"/>
                                     <local:MyPicker x:Name="smallPicker"
                                                     ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
                                                     ItemDisplayBinding="{Binding ProductName}"
-                                                    SelectedIndex="{Binding ID}"
+                                                    SelectedIndex="{Binding IngredientIndex}"
                                                     IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
                                                     Grid.Column="1"
                                                     TextColor="White"/>

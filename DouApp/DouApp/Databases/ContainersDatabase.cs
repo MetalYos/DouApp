@@ -1,24 +1,75 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 using DouApp.Models;
+using Newtonsoft.Json;
+using Xamarin.Forms;
 
 namespace DouApp.Databases
 {
     public class ContainersDatabase
     {
         List<Container> containers;
+        string name = "containers.txt";
 
         public ContainersDatabase()
         {
+            LoadContainers();
+            /*
             containers = new List<Container>();
-            containers.Add(new Container(1, App.Ingredients.GetIngredient("Cornflour"), 0.0, true));
-            containers.Add(new Container(2, App.Ingredients.GetIngredient("Flour"), 0.0, true));
-            containers.Add(new Container(3, App.Ingredients.GetIngredient("Poppyseed"), 0.0, true));
-            containers.Add(new Container(4, App.Ingredients.GetIngredient("Salt"), 0.0, false));
-            containers.Add(new Container(5, App.Ingredients.GetIngredient("Yeast"), 0.0, false));
-            containers.Add(new Container(6, App.Ingredients.GetIngredient("Soda Powder"), 0.0, false));
+            containers.Add(new Container(1, "Cornflour", 0, true));
+            containers.Add(new Container(2, "Flour", 0, true));
+            containers.Add(new Container(3, "Poppyseed", 0, true));
+            containers.Add(new Container(4, "Salt", 0, false));
+            containers.Add(new Container(5, "Yeast", 0, false));
+            containers.Add(new Container(6, "Soda Powder", 0, false));
+            */
+        }
+
+        private void LoadContainers()
+        {
+            containers = new List<Container>();
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string filePath = Path.Combine(path, "containers.txt");
+
+            if (!File.Exists(filePath))
+            {
+                containers.Add(new Container(1, "Cornflour", 0, true));
+                containers.Add(new Container(2, "Flour", 0, true));
+                containers.Add(new Container(3, "Poppyseed", 0, true));
+                containers.Add(new Container(4, "Salt", 0, false));
+                containers.Add(new Container(5, "Yeast", 0, false));
+                containers.Add(new Container(6, "Soda Powder", 0, false));
+            }
+            else
+            {
+                using (var file = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                {
+                    using (var strm = new StreamReader(file))
+                    {
+                        string json = strm.ReadToEnd();
+                        containers = JsonConvert.DeserializeObject<List<Container>>(json);
+                    }
+                }
+            }
+        }
+
+        public void SaveContainers()
+        {
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+            string filePath = Path.Combine(path, "containers.txt");
+
+            using (var file = File.Open(filePath, FileMode.Create, FileAccess.Write))
+            {
+                string json = JsonConvert.SerializeObject(containers);
+
+                using (var strm = new StreamWriter(file))
+                {
+                    strm.Write(json);
+                }
+            }
         }
 
         public Container GetContainer(int id)
@@ -45,12 +96,12 @@ namespace DouApp.Databases
             return containersToReturn;
         }
 
-        public void UpdateContainerAmount(int id, double amount)
+        public void UpdateContainerAmount(int id, decimal amount)
         {
             GetContainer(id).Amount = amount;
         }
 
-        public bool RemoveFromContainer(int id, double amountToRemove)
+        public bool RemoveFromContainer(int id, decimal amountToRemove)
         {
             if (GetContainer(id).Amount - amountToRemove < 0)
                 return false;
@@ -59,7 +110,7 @@ namespace DouApp.Databases
             return true;
         }
 
-        public void UpdateContainerIngredient(int id, Ingredient ingredient)
+        public void UpdateContainerIngredient(int id, string ingredient)
         {
             GetContainer(id).Ingredient = ingredient;
         }

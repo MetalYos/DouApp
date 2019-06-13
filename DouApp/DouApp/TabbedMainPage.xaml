@@ -78,7 +78,7 @@
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Ingredient.ProductName}"
+                                    <Label Text="{Binding Ingredient}"
                                            HorizontalOptions="StartAndExpand"
                                            VerticalOptions="Center"
                                            TextColor="White"/>
@@ -141,21 +141,24 @@
                      Padding="20,10,20,20">
             <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
             <StackLayout BackgroundColor="#002670"
-                             Padding="20,20,20,20">
+                         Padding="20,20,20,20"
+                         HorizontalOptions="FillAndExpand"
+                         VerticalOptions="FillAndExpand">
                 <Label Text="Application Settings"
-                   HorizontalOptions="CenterAndExpand"
-                   VerticalOptions="CenterAndExpand"
-                   FontSize="Large"
-                   TextColor="White" />
+                       HorizontalOptions="CenterAndExpand"
+                       VerticalOptions="StartAndExpand"
+                       FontSize="Large"
+                       TextColor="White" />
                 <Button x:Name="configureContainersButton" 
-                    Text="Configure Containers"
-                    BorderWidth="2"
-                    BorderRadius="10"
-                    BackgroundColor="#169F9B"
-                    TextColor="White"
-                    WidthRequest="280"
-                    HorizontalOptions="Center"
-                    Clicked="ConfigureContainersButton_Clicked" />
+                        Text="Configure Containers"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        Clicked="ConfigureContainersButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage>
