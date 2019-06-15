@@ -30,6 +30,15 @@ namespace DouApp.Databases
             {
                 var result = streamReader.ReadToEnd();
                 ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(result.ToString());
+                RenameIngredients();
+            }
+        }
+
+        private void RenameIngredients()
+        {
+            foreach (var item in ingredients)
+            {
+                item.ProductName = item.ProductName.Replace('_', ' ');
             }
         }
 
@@ -137,7 +146,6 @@ namespace DouApp.Databases
 
         public decimal ConvertToGr(string ingredientName, decimal amount, string type)
         {
-            ingredientName = ingredientName.Replace(' ', '_');
             Ingredient ingredient = GetIngredientConvert(ingredientName);
             if (ingredient == null)
                 return amount;

@@ -4,6 +4,24 @@ using System.Text;
 
 namespace DouApp.Models
 {
+
+    public class ContainersToDatabase
+    {
+        public int UserID { get; set; }
+        public string Ingredient1 { get; set; }
+        public string Ingredient2 { get; set; }
+        public string Ingredient3 { get; set; }
+        public string Ingredient4 { get; set; }
+        public string Ingredient5 { get; set; }
+        public string Ingredient6 { get; set; }
+        public decimal Amount1 { get; set; }
+        public decimal Amount2 { get; set; }
+        public decimal Amount3 { get; set; }
+        public decimal Amount4 { get; set; }
+        public decimal Amount5 { get; set; }
+        public decimal Amount6 { get; set; }
+    }
+
     public class ContainersAmounts
     {
         public decimal Amount1 { get; set; }

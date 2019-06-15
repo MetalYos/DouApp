@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text;
 
 using DouApp.Models;
@@ -11,11 +12,10 @@ namespace DouApp.Databases
 {
     public class ContainersDatabase
     {
-        string setContainersUrl;
-        string getContainersUrl;
+        string setContainersUrl = @"https://dohconverter.azurewebsites.net/api/SetContainers";
+        string getContainersUrl = @"https://dohconverter.azurewebsites.net/api/GetContainers";
         string updateAmountsUrl;
         List<Container> containers;
-        string name = "containers.txt";
 
         public ContainersDatabase()
         {
@@ -24,46 +24,123 @@ namespace DouApp.Databases
 
         private void LoadContainers()
         {
-            containers = new List<Container>();
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string filePath = Path.Combine(path, name);
+            ContainersToDatabase containersToDB = new ContainersToDatabase();
+            containersToDB.UserID = App.UserID;
 
-            if (!File.Exists(filePath))
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(getContainersUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var reqStream = httpWebRequest.GetRequestStream())
             {
-                containers.Add(new Container(1, "Cornflour", 0, true));
-                containers.Add(new Container(2, "Flour", 0, true));
-                containers.Add(new Container(3, "Poppyseed", 0, true));
-                containers.Add(new Container(4, "Salt", 0, false));
-                containers.Add(new Container(5, "Yeast", 0, false));
-                containers.Add(new Container(6, "Soda Powder", 0, false));
-            }
-            else
-            {
-                using (var file = File.Open(filePath, FileMode.Open, FileAccess.Read))
+                using (var streamWriter = new StreamWriter(reqStream))
                 {
-                    using (var strm = new StreamReader(file))
-                    {
-                        string json = strm.ReadToEnd();
-                        containers = JsonConvert.DeserializeObject<List<Container>>(json);
-                    }
+                    string jsonOutput = JsonConvert.SerializeObject(containersToDB);
+
+                    streamWriter.Write(jsonOutput);
+                    streamWriter.Flush();
+                    streamWriter.Close();
                 }
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    containersToDB = JsonConvert.DeserializeObject<ContainersToDatabase>(result.ToString());
+                }
+            }
+
+            ContainersToList(containersToDB);
+        }
+
+        private void ContainersToList(ContainersToDatabase containersToDB)
+        {
+            containers = new List<Container>();
+
+            if (containersToDB.Ingredient1 == null)
+                containers.Add(new Container(1, "Cornflour", 0, true));
+            else
+                containers.Add(new Container(1, containersToDB.Ingredient1.Replace('_', ' '), 
+                    containersToDB.Amount1, true));
+
+            if (containersToDB.Ingredient2 == null)
+                containers.Add(new Container(2, "Flour", 0, true));
+            else
+                containers.Add(new Container(2, containersToDB.Ingredient2.Replace('_', ' '), 
+                    containersToDB.Amount2, true));
+
+            if (containersToDB.Ingredient3 == null)
+                containers.Add(new Container(3, "Poppyseed", 0, true));
+            else
+                containers.Add(new Container(3, containersToDB.Ingredient3.Replace('_', ' '), 
+                    containersToDB.Amount3, true));
+
+            if (containersToDB.Ingredient4 == null)
+                containers.Add(new Container(4, "Salt", 0, false));
+            else
+                containers.Add(new Container(4, containersToDB.Ingredient4.Replace('_', ' '), 
+                    containersToDB.Amount4, false));
+
+            if (containersToDB.Ingredient5 == null)
+                containers.Add(new Container(5, "Yeast", 0, false));
+            else
+                containers.Add(new Container(5, containersToDB.Ingredient5.Replace('_', ' '), 
+                    containersToDB.Amount5, true));
+
+            if (containersToDB.Ingredient6 == null)
+                containers.Add(new Container(6, "Soda Powder", 0, false));
+            else
+                containers.Add(new Container(6, containersToDB.Ingredient6.Replace('_', ' '), 
+                    containersToDB.Amount6, false));
+        }
+
+        public bool SaveContainers()
+        {
+            ContainersToDatabase containersToDB = ListToContainers();
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(setContainersUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var reqStream = httpWebRequest.GetRequestStream())
+            {
+                using (var streamWriter = new StreamWriter(reqStream))
+                {
+                    string jsonOutput = JsonConvert.SerializeObject(containersToDB);
+
+                    streamWriter.Write(jsonOutput);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                HttpStatusCode code = httpResponse.StatusCode;
+                httpResponse.Close();
+
+                return (code == HttpStatusCode.OK);
             }
         }
 
-        public void SaveContainers()
+        private ContainersToDatabase ListToContainers()
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            string filePath = Path.Combine(path, name);
+            ContainersToDatabase containersToDB = new ContainersToDatabase();
+            containersToDB.UserID = App.UserID;
+            containersToDB.Ingredient1 = containers[0].Ingredient;
+            containersToDB.Amount1 = containers[0].Amount;
+            containersToDB.Ingredient2 = containers[1].Ingredient;
+            containersToDB.Amount2 = containers[1].Amount;
+            containersToDB.Ingredient3 = containers[2].Ingredient;
+            containersToDB.Amount3 = containers[2].Amount;
+            containersToDB.Ingredient4 = containers[3].Ingredient;
+            containersToDB.Amount4 = containers[3].Amount;
+            containersToDB.Ingredient5 = containers[4].Ingredient;
+            containersToDB.Amount5 = containers[4].Amount;
+            containersToDB.Ingredient6 = containers[5].Ingredient;
+            containersToDB.Amount6 = containers[5].Amount;
 
-            using (var file = File.Open(filePath, FileMode.Create, FileAccess.Write))
-            {
-                string json = JsonConvert.SerializeObject(containers);
-
-                using (var strm = new StreamWriter(file))
-                {
-                    strm.Write(json);
-                }
-            }
+            return containersToDB;
         }
 
         public Container GetContainer(int id)
