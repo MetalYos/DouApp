@@ -62,6 +62,12 @@ namespace DouApp
 
         async private void SaveRecipeButton_Clicked(object sender, EventArgs e)
         {
+            if (recipeNameEntry.Text == string.Empty)
+            {
+                await DisplayAlert("Error!", "Please enter a name before saving!", "Ok");
+                return;
+            }
+
             var controller = BindingContext as RecipePageController;
 
             if (controller == null)

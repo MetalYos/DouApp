@@ -32,7 +32,7 @@ namespace DouApp
 
         private void LoginButton_Clicked(object sender, EventArgs e)
         {
-            /*
+
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;
             int id = App.Users.GetUserID(username, password);
@@ -46,6 +46,7 @@ namespace DouApp
             App.UserID = id;
 
             // Connect to Bluetooth
+            /*
             bool connected = DependencyService.Get<IBluetoothHelper>().Connect("Sharon").Result;
             int count = 0;
             while (!connected)
@@ -60,7 +61,7 @@ namespace DouApp
             }
             */
 
-            App.UserID = 5;
+            //App.UserID = 5;
             var tabbedPage = new TabbedMainPage()
             {
                 BarBackgroundColor = Color.FromHex("#002060")

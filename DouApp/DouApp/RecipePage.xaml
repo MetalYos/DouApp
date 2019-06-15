@@ -59,13 +59,18 @@
                                             </x:Array>
                                         </Picker.ItemsSource>
                                     </local:MyPicker>
-                                    <local:MyEntry Text="tsp"
-                                                   VerticalOptions="CenterAndExpand" 
-                                                   HorizontalOptions="StartAndExpand"
-                                                   TextColor="White"
-                                                   IsReadOnly="True"
-                                                   IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
-                                                   Grid.Column="2" />
+                                    <local:MyPicker Title="Unit"
+                                                    TextColor="White"
+                                                    Grid.Column="2"
+                                                    IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
+                                                    SelectedIndex="{Binding UnitsIndex}">
+                                        <Picker.ItemsSource>
+                                            <x:Array Type="{x:Type x:String}">
+                                                <x:String>tsp</x:String>
+                                                <x:String>tbsp</x:String>
+                                            </x:Array>
+                                        </Picker.ItemsSource>
+                                    </local:MyPicker>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

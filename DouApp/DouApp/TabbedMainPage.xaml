@@ -46,16 +46,6 @@
                     WidthRequest="280"
                     HorizontalOptions="Center"
                     Clicked="NewRecipeButton_Clicked" />
-                <!-- Download Recepie (Maybe) -->
-                <Button x:Name="downloadRecipeButton"
-                    Text="Download Recipe"
-                    BorderWidth="2"
-                    BorderRadius="10"
-                    BackgroundColor="#169F9B"
-                    TextColor="White"
-                    WidthRequest="280"
-                    HorizontalOptions="Center"
-                    Clicked="DownloadRecipeButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage>

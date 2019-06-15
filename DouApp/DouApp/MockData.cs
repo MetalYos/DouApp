@@ -14,19 +14,6 @@ namespace DouApp
         Full
     }
 
-    public class RecipeComparer : IComparer<Recipe>
-    {
-        public int Compare(Recipe x, Recipe y)
-        {
-            if (x.Date < y.Date)
-                return -1;
-            if (x.Date > y.Date)
-                return 1;
-
-            return 0;
-        }
-    }
-
     public class ContainerComparerByID : IComparer<Container>
     {
         public int Compare(Container x, Container y)
@@ -42,6 +29,7 @@ namespace DouApp
 
     public class MockData
     {
+        /*
         private List<Recipe> recipes;
         private List<Container> containers;
 
@@ -197,5 +185,6 @@ namespace DouApp
             }
             return false;
         }
+        */
     }
 }

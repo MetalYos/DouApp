@@ -6,24 +6,22 @@ namespace DouApp.Models
 {
     public class Ingredient
     {
-        static int count = 0;
-
-        public int ID { get; set; }
         public string ProductName { get; set; }
-        public string Type { get; set; }
+        public string MeasuringType { get; set; }
+        public decimal Tsp { get; set; }
+        public decimal Tbsp { get; set; }
+        public decimal Cup { get; set; }
 
         public Ingredient()
         {
-            ID = count++;
             ProductName = "";
-            Type = "gr";
+            MeasuringType = "gr";
         }
 
         public Ingredient(string name, string type = "gr")
         {
-            ID = count++;
             ProductName = name;
-            Type = type;
+            MeasuringType = type;
         }
     }
 }

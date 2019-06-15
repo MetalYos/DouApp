@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
+using System.IO;
+using System.Net;
+using System.Diagnostics;
 
 using DouApp.Models;
+using Newtonsoft.Json;
 
 namespace DouApp.Databases
 {
@@ -22,7 +25,9 @@ namespace DouApp.Databases
 
     public class RecipesDatabase
     {
-        ObservableCollection<UserRecipe> recipes;
+        string getRecipesUrl = @"https://dohconverter.azurewebsites.net/api/GetUserRecipes";
+        string addOrUpdateUrl = @"https://dohconverter.azurewebsites.net/api/AddUserRecipe";
+        ObservableCollection<UserRecipe> mockRecipes;
 
         public RecipesDatabase()
         {
@@ -31,113 +36,178 @@ namespace DouApp.Databases
 
         void PopulateMock()
         {
-            recipes = new ObservableCollection<UserRecipe>();
+            mockRecipes = new ObservableCollection<UserRecipe>();
 
-            recipes.Add(new UserRecipe()
+            mockRecipes.Add(new UserRecipe()
             {
                 UserID = 5,
                 RecipeName = "FirstTest",
                 LastUse = new DateTime(2019, 5, 30),
-                Ingridient1 = "Cornflour",
+                Ingredient1 = "Cornflour",
                 Amount1 = 700.0M,
                 Type1 = "gr",
-                Ingridient2 = "Flour",
+                Ingredient2 = "Flour",
                 Amount2 = 560.0M,
                 Type2 = "gr",
-                Ingridient3 = "Poppyseed",
+                Ingredient3 = "Poppyseed",
                 Amount3 = 49.0M,
                 Type3 = "gr",
-                Ingridient4 = "Salt",
+                Ingredient4 = "Salt",
                 Amount4 = 4.0M,
                 Type4 = "tsp",
-                Ingridient5 = "Yeast",
+                Ingredient5 = "Yeast",
                 Amount5 = 5.0M,
                 Type5 = "tsp",
-                Ingridient6 = "Soda Powder",
+                Ingredient6 = "Soda Powder",
                 Amount6 = 32.0M,
                 Type6 = "tsp"
             });
 
-            recipes.Add(new UserRecipe()
+            mockRecipes.Add(new UserRecipe()
             {
                 UserID = 5,
                 RecipeName = "SecondTest",
                 LastUse = new DateTime(2019, 4, 27),
-                Ingridient1 = "Cornflour",
+                Ingredient1 = "Cornflour",
                 Amount1 = 700.0M,
                 Type1 = "gr",
-                Ingridient2 = "Flour",
+                Ingredient2 = "Flour",
                 Amount2 = 560.0M,
                 Type2 = "gr",
-                Ingridient3 = "Poppyseed",
+                Ingredient3 = "Poppyseed",
                 Amount3 = 49.0M,
                 Type3 = "gr",
-                Ingridient4 = "Salt",
+                Ingredient4 = "Salt",
                 Amount4 = 4.0M,
                 Type4 = "tsp",
-                Ingridient5 = "Yeast",
+                Ingredient5 = "Yeast",
                 Amount5 = 5.0M,
                 Type5 = "tsp",
-                Ingridient6 = "Soda Powder",
+                Ingredient6 = "Soda Powder",
                 Amount6 = 32.0M,
                 Type6 = "tsp"
             });
 
-            recipes.Add(new UserRecipe()
+            mockRecipes.Add(new UserRecipe()
             {
                 UserID = 5,
                 RecipeName = "ThirdTest",
                 LastUse = new DateTime(2019, 6, 10),
-                Ingridient1 = "Cornflour",
+                Ingredient1 = "Cornflour",
                 Amount1 = 700.0M,
                 Type1 = "gr",
-                Ingridient2 = "Flour",
+                Ingredient2 = "Flour",
                 Amount2 = 560.0M,
                 Type2 = "gr",
-                Ingridient3 = "Poppyseed",
+                Ingredient3 = "Poppyseed",
                 Amount3 = 1.0M,
                 Type3 = "cups",
-                Ingridient4 = "Salt",
+                Ingredient4 = "Salt",
                 Amount4 = 3.0M,
                 Type4 = "tsp",
-                Ingridient5 = "Yeast",
+                Ingredient5 = "Yeast",
                 Amount5 = 2.0M,
                 Type5 = "tsp",
-                Ingridient6 = "Soda Powder",
+                Ingredient6 = "Soda Powder",
                 Amount6 = 1.0M,
-                Type6 = "tsp"
+                Type6 = "tbsp"
             });
         }
 
-        public void AddRecipe(UserRecipe recipe)
+        public UserRecipe AddRecipe(UserRecipe recipe)
         {
-            UpdateIngredientsNames(recipe);
+            UserRecipe convertedRecipe = new UserRecipe();
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(addOrUpdateUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonOutput = JsonConvert.SerializeObject(recipe);
+
+                streamWriter.Write(jsonOutput);
+                streamWriter.Flush();
+                streamWriter.Close();
+
+                try
+                {
+                    HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                        convertedRecipe = JsonConvert.DeserializeObject<UserRecipe>(result.ToString());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                }
+            }
+
+            return convertedRecipe;
         }
 
-        public void UpdateRecipe(UserRecipe recipe)
+        public UserRecipe UpdateRecipe(UserRecipe recipe)
         {
-            UpdateIngredientsNames(recipe);
+            return AddRecipe(recipe);
         }
 
         public ObservableCollection<UserRecipe> GetRecipes(int userID)
         {
-            return new ObservableCollection<UserRecipe>();
+            List<UserRecipe> userRecipes = new List<UserRecipe>();
+
+            User user = new User
+            {
+                ID = userID,
+                Username = "",
+                Email = "",
+                Password = ""
+            };
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(getRecipesUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var reqStream = httpWebRequest.GetRequestStream())
+            {
+                using (var streamWriter = new StreamWriter(reqStream))
+                {
+                    string jsonOutput = JsonConvert.SerializeObject(user);
+
+                    streamWriter.Write(jsonOutput);
+                    streamWriter.Flush();
+                    streamWriter.Close();
+                }
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+
+                    try
+                    {
+                        userRecipes = JsonConvert.DeserializeObject<List<UserRecipe>>(result.ToString());
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Write(e.Message);
+                        userRecipes = new List<UserRecipe>();
+                    }
+                }
+            }
+
+            ObservableCollection<UserRecipe> recipes = new ObservableCollection<UserRecipe>(userRecipes);
+            Helpers.SortUserRecipes(recipes, UserRecipe.CompareByLastUse);
+
+            return recipes;
         }
 
         public ObservableCollection<UserRecipe> GetRecipesMock()
         {
-            return recipes;
-        }
-
-        // Change any space to an underscore to match ingredients in database
-        private void UpdateIngredientsNames(UserRecipe recipe)
-        {
-            recipe.Ingridient1.Replace(' ', '_');
-            recipe.Ingridient2.Replace(' ', '_');
-            recipe.Ingridient3.Replace(' ', '_');
-            recipe.Ingridient4.Replace(' ', '_');
-            recipe.Ingridient5.Replace(' ', '_');
-            recipe.Ingridient6.Replace(' ', '_');
+            return mockRecipes;
         }
     }
 }

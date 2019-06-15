@@ -104,6 +104,9 @@ namespace DouApp
         protected override void OnStart()
         {
             // Handle when your app starts
+
+            // Load ingredients conversion table at start up
+            Ingredients.LoadTable();
         }
 
         protected override void OnSleep()

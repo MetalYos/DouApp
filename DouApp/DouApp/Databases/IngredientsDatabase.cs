@@ -1,20 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Text;
 using DouApp.Models;
+using Newtonsoft.Json;
 
 namespace DouApp.Databases
 {
     public class IngredientsDatabase
     {
+        string conversionTableUrl = @"https://dohconverter.azurewebsites.net/api/GetConvTable";
         List<Ingredient> ingredients;
 
         public IngredientsDatabase()
         {
             ingredients = new List<Ingredient>();
-            PopulateDatabase();
         }
 
+        public void LoadTable()
+        {
+            User user = new User();
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(conversionTableUrl);
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(result.ToString());
+            }
+        }
+
+        /*
         private void PopulateDatabase()
         {
             ingredients.Add(new Ingredient("Flour"));
@@ -39,24 +58,7 @@ namespace DouApp.Databases
             ingredients.Add(new Ingredient("Cinnamon", "tsp"));
             ingredients.Add(new Ingredient("Nes Cafe", "tsp"));
         }
-
-        public bool AddIngredient(Ingredient ingredient)
-        {
-            if (ContainsIngredient(ingredient))
-                return false;
-
-            ingredients.Add(ingredient);
-            return true;
-        }
-
-        public bool RemoveIngredient(Ingredient ingredient)
-        {
-            if (!ContainsIngredient(ingredient))
-                return false;
-
-            ingredients.Remove(ingredient);
-            return true;
-        }
+        */
 
         public bool ContainsIngredient(Ingredient ingredient)
         {
@@ -89,13 +91,13 @@ namespace DouApp.Databases
             return ingredients;
         }
 
-        public List<Ingredient> GetIngredientsByType(string type)
+        public List<Ingredient> GetIngredientsByMeasuringType(string type)
         {
             List<Ingredient> ings = new List<Ingredient>();
 
             foreach (var ingredient in ingredients)
             {
-                if (ingredient.Type == type)
+                if (ingredient.MeasuringType == type)
                     ings.Add(ingredient);
             }
 
@@ -119,13 +121,37 @@ namespace DouApp.Databases
             if (isLarge)
                 return index;
 
-            index -= GetIngredientsByType("gr").Count;
+            index -= GetIngredientsByMeasuringType("gr").Count;
             return index;
         }
 
-        public decimal ConvertAmount(string ingredient, decimal amount, string type)
+        public Ingredient GetIngredientConvert(string ingredientName)
         {
-            return 0;
+            foreach (var item in ingredients)
+            {
+                if (ingredientName.ToLower().Trim() == item.ProductName.ToLower().Trim())
+                    return item;
+            }
+            return null;
+        }
+
+        public decimal ConvertToGr(string ingredientName, decimal amount, string type)
+        {
+            ingredientName = ingredientName.Replace(' ', '_');
+            Ingredient ingredient = GetIngredientConvert(ingredientName);
+            if (ingredient == null)
+                return amount;
+
+            if (type == "gr")
+                return amount;
+            if (type == "tsp")
+                return amount * ingredient.Tsp;
+            if (type == "tbsp")
+                return amount * ingredient.Tbsp / ingredient.Tsp;
+            if (type == "cups")
+                return amount * ingredient.Cup;
+
+            return amount;
         }
     }
 }

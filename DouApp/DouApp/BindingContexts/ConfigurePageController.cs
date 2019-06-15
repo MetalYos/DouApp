@@ -21,8 +21,8 @@ namespace DouApp.BindingContexts
 
         public ConfigurePageController()
         {
-            LargeIngredients = App.Ingredients.GetIngredientsByType("gr");
-            SmallIngredients = App.Ingredients.GetIngredientsByType("tsp");
+            LargeIngredients = App.Ingredients.GetIngredientsByMeasuringType("gr");
+            SmallIngredients = App.Ingredients.GetIngredientsByMeasuringType("tsp");
 
             List<Container> containers = App.Containers.GetContainers();
             Containers = new List<ContainerAndID>();

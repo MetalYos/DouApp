@@ -13,8 +13,8 @@ namespace DouApp.Databases
 {
     public class UsersDatabase
     {
-        private string userLoginURL = "https://dohconverter.azurewebsites.net/api/UserLogin?code=UCjmvcAyL9yv6wLPLf5QChd21Dg8tOUMxaoTbrkoKhy4rSO8NIZgrA==";
-        private string registerUserURL = "https://dohconverter.azurewebsites.net/api/UserRegister?code=1pvCozgmaGP7Lrega6GGXHmqup5piMPtPVLKlF/Ug4e/52OvlrByCQ==";
+        private string userLoginURL = "https://dohconverter.azurewebsites.net/api/UserLogin";
+        private string registerUserURL = "https://dohconverter.azurewebsites.net/api/UserRegister";
 
         public int GetUserID(string username, string password)
         {

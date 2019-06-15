@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using DouApp.Models;
+
 namespace DouApp
 {
     public static class Helpers
     {
-        public static void Sort<T>(this ObservableCollection<T> collection, Comparison<T> comparison = null)
+        public static void SortUserRecipes(this ObservableCollection<UserRecipe> collection, Comparison<UserRecipe> comparison = null)
         {
-            var sortableList = new List<T>(collection);
+            var sortableList = new List<UserRecipe>(collection);
             if (comparison == null)
                 sortableList.Sort();
             else
