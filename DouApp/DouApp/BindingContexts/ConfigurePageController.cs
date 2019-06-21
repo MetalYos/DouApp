@@ -9,7 +9,7 @@ namespace DouApp.BindingContexts
     public class ContainerAndID
     {
         public Container Container { get; set; }
-        public int IngredientIndex { get; set; }
+        public Ingredient Ingredient{ get; set; }
         public decimal Amount { get; set; }
     }
 
@@ -28,11 +28,10 @@ namespace DouApp.BindingContexts
             Containers = new List<ContainerAndID>();
             foreach (var container in containers)
             {
-                int index = App.Ingredients.GetIngredientIndexBySize(container.Ingredient, container.IsLarge);
                 Containers.Add(new ContainerAndID
                 {
                     Container = container,
-                    IngredientIndex = index,
+                    Ingredient = App.Ingredients.GetIngredient(container.Ingredient),
                     Amount = container.Amount
                 });
             }
@@ -42,11 +41,9 @@ namespace DouApp.BindingContexts
         {
             for (int i = 0; i < Containers.Count; i++)
             {
-                int index = Containers[i].IngredientIndex;
-                if (!Containers[i].Container.IsLarge)
-                    index += LargeIngredients.Count;
+                Ingredient ingredient = Containers[i].Ingredient;
 
-                App.Containers.UpdateContainerIngredient(i + 1, App.Ingredients.GetIngredient(index).ProductName);
+                App.Containers.UpdateContainerIngredient(i + 1, ingredient.ProductName);
                 App.Containers.UpdateContainerAmount(i + 1, Containers[i].Amount);
             }
 
