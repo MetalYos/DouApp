@@ -28,7 +28,7 @@ namespace DouApp.BindingContexts
             Containers = new List<ContainerAndID>();
             foreach (var container in containers)
             {
-                int index = App.Ingredients.GetIngredientInexBySize(container.Ingredient, container.IsLarge);
+                int index = App.Ingredients.GetIngredientIndexBySize(container.Ingredient, container.IsLarge);
                 Containers.Add(new ContainerAndID
                 {
                     Container = container,

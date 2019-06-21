@@ -24,6 +24,7 @@ namespace DouApp.Models
 
     public class ContainersAmounts
     {
+        public int UserID { get; set; }
         public decimal Amount1 { get; set; }
         public decimal Amount2 { get; set; }
         public decimal Amount3 { get; set; }

@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using DouApp.Interfaces;
+using DouApp.Models;
 
 namespace DouApp
 {
@@ -30,7 +31,7 @@ namespace DouApp
             await Navigation.PushAsync(new SignUpPage());
         }
 
-        private void LoginButton_Clicked(object sender, EventArgs e)
+        private async void LoginButton_Clicked(object sender, EventArgs e)
         {
 
             string username = usernameEntry.Text;
@@ -39,27 +40,25 @@ namespace DouApp
 
             if (id == 0)
             {
-                DisplayAlert("Wrong credintials", "The entered Username or Password does not exist in database", "OK");
+                await DisplayAlert("Wrong credintials", "The entered Username or Password does not exist in database", "OK");
                 return;
             }
 
             App.UserID = id;
 
             // Connect to Bluetooth
-            /*
-            bool connected = DependencyService.Get<IBluetoothHelper>().Connect("Sharon").Result;
-            int count = 0;
-            while (!connected)
+            bool tryAgain = true;
+            while (tryAgain)
             {
-                connected = DependencyService.Get<IBluetoothHelper>().Connect("Sharon").Result;
-                count++;
-                if (count == 10)
+                if (!await ConnectToBluetoothDevice(App.DeviceName, 1))
                 {
-                    DisplayAlert("Connection Error", "Can't connect to bluetooth!", "OK");
-                    return;
+                    string answer = await DisplayActionSheet("Couldn't connect to " + App.DeviceName + "! Try again?",
+                        "Cancel", null, "Yes", "No");
+                    if (answer == "Yes") tryAgain = true;
+                    else if (answer == "No") tryAgain = false;
+                    else return;
                 }
             }
-            */
 
             //App.UserID = 5;
             var tabbedPage = new TabbedMainPage()
@@ -71,6 +70,27 @@ namespace DouApp
                 BarBackgroundColor = Color.FromHex("#002060")
             };
             Application.Current.MainPage = page;
+        }
+
+        private async Task<bool> ConnectToBluetoothDevice(string name, int numTimes)
+        {
+            while (!DependencyService.Get<IBluetoothHelper>().IsConnected() && numTimes > 0)
+            {
+                numTimes--;
+                try
+                {
+                    await DependencyService.Get<IBluetoothHelper>().Connect(name);
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+
+            if (numTimes == 0)
+                return true;
+            else
+                return false;
         }
     }
 }

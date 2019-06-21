@@ -61,37 +61,37 @@ namespace DouApp.Databases
             if (containersToDB.Ingredient1 == null)
                 containers.Add(new Container(1, "Cornflour", 0, true));
             else
-                containers.Add(new Container(1, containersToDB.Ingredient1.Replace('_', ' '), 
+                containers.Add(new Container(1, containersToDB.Ingredient1, 
                     containersToDB.Amount1, true));
 
             if (containersToDB.Ingredient2 == null)
                 containers.Add(new Container(2, "Flour", 0, true));
             else
-                containers.Add(new Container(2, containersToDB.Ingredient2.Replace('_', ' '), 
+                containers.Add(new Container(2, containersToDB.Ingredient2, 
                     containersToDB.Amount2, true));
 
             if (containersToDB.Ingredient3 == null)
                 containers.Add(new Container(3, "Poppyseed", 0, true));
             else
-                containers.Add(new Container(3, containersToDB.Ingredient3.Replace('_', ' '), 
+                containers.Add(new Container(3, containersToDB.Ingredient3, 
                     containersToDB.Amount3, true));
 
             if (containersToDB.Ingredient4 == null)
                 containers.Add(new Container(4, "Salt", 0, false));
             else
-                containers.Add(new Container(4, containersToDB.Ingredient4.Replace('_', ' '), 
+                containers.Add(new Container(4, containersToDB.Ingredient4, 
                     containersToDB.Amount4, false));
 
             if (containersToDB.Ingredient5 == null)
                 containers.Add(new Container(5, "Yeast", 0, false));
             else
-                containers.Add(new Container(5, containersToDB.Ingredient5.Replace('_', ' '), 
-                    containersToDB.Amount5, true));
+                containers.Add(new Container(5, containersToDB.Ingredient5, 
+                    containersToDB.Amount5, false));
 
             if (containersToDB.Ingredient6 == null)
                 containers.Add(new Container(6, "Soda Powder", 0, false));
             else
-                containers.Add(new Container(6, containersToDB.Ingredient6.Replace('_', ' '), 
+                containers.Add(new Container(6, containersToDB.Ingredient6, 
                     containersToDB.Amount6, false));
         }
 
@@ -184,6 +184,11 @@ namespace DouApp.Databases
         public void UpdateContainerIngredient(int id, string ingredient)
         {
             GetContainer(id).Ingredient = ingredient;
+        }
+
+        public void UpdateContainers()
+        {
+
         }
     }
 }

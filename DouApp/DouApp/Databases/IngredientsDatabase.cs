@@ -11,6 +11,7 @@ namespace DouApp.Databases
     public class IngredientsDatabase
     {
         string conversionTableUrl = @"https://dohconverter.azurewebsites.net/api/GetConvTable";
+        decimal tspToGr = 4.26M;
         List<Ingredient> ingredients;
 
         public IngredientsDatabase()
@@ -30,15 +31,6 @@ namespace DouApp.Databases
             {
                 var result = streamReader.ReadToEnd();
                 ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(result.ToString());
-                RenameIngredients();
-            }
-        }
-
-        private void RenameIngredients()
-        {
-            foreach (var item in ingredients)
-            {
-                item.ProductName = item.ProductName.Replace('_', ' ');
             }
         }
 
@@ -124,7 +116,7 @@ namespace DouApp.Databases
             return -1;
         }
 
-        public int GetIngredientInexBySize(string ingredientName, bool isLarge)
+        public int GetIngredientIndexBySize(string ingredientName, bool isLarge)
         {
             int index = GetIngredientIndex(ingredientName);
             if (isLarge)
@@ -134,30 +126,36 @@ namespace DouApp.Databases
             return index;
         }
 
-        public Ingredient GetIngredientConvert(string ingredientName)
-        {
-            foreach (var item in ingredients)
-            {
-                if (ingredientName.ToLower().Trim() == item.ProductName.ToLower().Trim())
-                    return item;
-            }
-            return null;
-        }
-
+        // Converts from cups, tsp and tbsp to gr
         public decimal ConvertToGr(string ingredientName, decimal amount, string type)
         {
-            Ingredient ingredient = GetIngredientConvert(ingredientName);
+            Ingredient ingredient = GetIngredient(ingredientName);
             if (ingredient == null)
                 return amount;
 
             if (type == "gr")
                 return amount;
+            if (type == "cups")
+                return amount * ingredient.Cup;
             if (type == "tsp")
                 return amount * ingredient.Tsp;
             if (type == "tbsp")
-                return amount * ingredient.Tbsp / ingredient.Tsp;
-            if (type == "cups")
-                return amount * ingredient.Cup;
+                return amount * ingredient.Tbsp;
+
+            return amount;
+        }
+
+        // Converts from tbsp to tsp
+        public decimal ConvertToTsp(string ingredientName, decimal amount, string type)
+        {
+            Ingredient ingredient = GetIngredient(ingredientName);
+            if (ingredient == null)
+                return amount;
+
+            if (type == "tsp")
+                return amount; ;
+            if (type == "tbsp")
+                return amount * (ingredient.Tbsp / ingredient.Tsp);
 
             return amount;
         }

@@ -10,6 +10,7 @@ namespace DouApp.Interfaces
         bool IsConnected();
         List<MyBluetoothDevice> GetPairedDevices();
         Task<bool> Connect(string name);
-        void WriteBufferToDevice(byte[] buffer);
+        void WriteStringToDevice(string message);
+        Task<string> ReadStringFromDevice(int maxSeconds);
     }
 }

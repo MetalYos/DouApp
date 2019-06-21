@@ -20,8 +20,10 @@ namespace DouApp
     public partial class App : Application
     {
         // User ID
-        static int userID = 0;
         public static int UserID { get; set; }
+
+        // Bluetooth Device Name
+        public static string DeviceName { get; set;  }
 
 
         // Databases
@@ -94,6 +96,9 @@ namespace DouApp
         public App()
         {
             InitializeComponent();
+
+            UserID = 0;
+            DeviceName = "Sharon";
 
             MainPage = new NavigationPage(new LoginPage())
             {

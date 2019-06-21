@@ -17,6 +17,8 @@ using DouApp.Models;
 using Java.Util;
 using System.IO;
 using System.Threading;
+using System.Text;
+using Java.IO;
 
 [assembly: Dependency(typeof(BluetoothHelper))]
 namespace DouApp.Droid
@@ -109,10 +111,11 @@ namespace DouApp.Droid
             return devices;
         }
 
-        public async void WriteBufferToDevice(byte[] buffer)
+        public async void WriteStringToDevice(string message)
         {
             if (IsConnected())
             {
+                byte[] buffer = Encoding.ASCII.GetBytes(message.ToArray());
                 await _socket.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             }
         }
@@ -124,6 +127,41 @@ namespace DouApp.Droid
 
             if (!adapter.IsEnabled)
                 throw new Exception("Bluetooth adapter is not enabled.");
+        }
+
+        public async Task<string> ReadStringFromDevice(int maxSeconds)
+        {
+            byte[] buffer = new byte[1024];  // buffer store for the stream
+            int bytes; // bytes returned from read()
+            string message = "";
+
+            try
+            {
+                DataInputStream mmInStream = new DataInputStream(_socket.InputStream);
+
+                System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
+                stopWatch.Start();
+                TimeSpan maxTime = new TimeSpan(0, 0, maxSeconds);
+                while (!message.Contains('\n'))
+                {
+                    // Read from input string
+                    bytes = await mmInStream.ReadAsync(buffer);
+                    message += Encoding.ASCII.GetString(buffer, 0, bytes);
+                    if (stopWatch.Elapsed == maxTime)
+                    {
+                        message = "";
+                        stopWatch.Stop();
+                        break;
+                    }
+                }
+                stopWatch.Stop();
+            }
+            catch
+            {
+                return message;
+            }
+
+            return message;
         }
     }
 }
