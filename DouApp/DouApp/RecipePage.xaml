@@ -59,12 +59,12 @@
                                                     TextColor="White"
                                                     IsVisible="{Binding IsLarge}"
                                                     SelectedIndex="{Binding UnitsIndex}">
-                                        <Picker.ItemsSource>
-                                            <x:Array Type="{x:Type x:String}">
-                                                <x:String>gr</x:String>
-                                                <x:String>cup</x:String>
-                                            </x:Array>
-                                        </Picker.ItemsSource>
+                                            <Picker.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>gr</x:String>
+                                                    <x:String>cup</x:String>
+                                                </x:Array>
+                                            </Picker.ItemsSource>
                                         </local:MyPicker>
                                         <local:MyPicker Title="Unit"
                                                     TextColor="White"
@@ -82,8 +82,8 @@
                                                    HorizontalOptions="StartAndExpand"
                                                    Grid.Column="2"
                                                    TextColor="White"
-                                                   LineColor="White"
                                                    DisabledColor="White"
+                                                   LineColor="White"
                                                    IsEnabled="False"
                                                    IsVisible="{Binding IsLiquid}"/>
                                 </Grid>

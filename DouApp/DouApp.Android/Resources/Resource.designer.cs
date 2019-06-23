@@ -6361,7 +6361,7 @@ namespace DouApp.Droid
 			public const int icon = 2130837776;
 			
 			// aapt resource value: 0x7f020111
-			public const int Logo = 2130837777;
+			public const int logo = 2130837777;
 			
 			// aapt resource value: 0x7f020112
 			public const int mr_button_connected_dark = 2130837778;
