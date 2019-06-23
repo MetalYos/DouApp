@@ -48,7 +48,7 @@
                                            HorizontalOptions="StartAndExpand"
                                            TextColor="White"
                                            Grid.Column="0" />
-                                    <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.0}'}"
+                                    <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.00}'}"
                                                    Placeholder="Amount"
                                                    TextColor="White"
                                                    Grid.Column="1"/>

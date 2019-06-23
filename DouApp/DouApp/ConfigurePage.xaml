@@ -41,13 +41,15 @@
                                                         ItemDisplayBinding="{Binding ProductName}"
                                                         SelectedItem="{Binding Ingredient}"
                                                         IsVisible="{Binding Container.IsLarge}"
-                                                        TextColor="White" />
+                                                        TextColor="White"
+                                                        LineColor="White"/>
                                         <local:MyPicker x:Name="smallPicker"
                                                         ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
                                                         ItemDisplayBinding="{Binding ProductName}"
                                                         SelectedItem="{Binding Ingredient}"
                                                         IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
-                                                        TextColor="White" />
+                                                        TextColor="White"
+                                                        LineColor="White"/>
                                     </StackLayout>
                                     <local:MyEntry Text="{Binding Ingredient.ProductName}"
                                                    Placeholder="Ingredient"
@@ -59,7 +61,7 @@
                                                    HorizontalOptions="StartAndExpand"
                                                    IsEnabled="False"
                                                    IsVisible="{Binding Container.IsLiquid}"/>
-                                    <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.0}'}"
+                                    <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.00}'}"
                                                    Placeholder="Amount"
                                                    HorizontalOptions="Center"
                                                    Grid.Column="2"

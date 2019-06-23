@@ -30,10 +30,10 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Label Text="{Binding GenericName}"
-                                           HorizontalOptions="Start"
+                                           HorizontalOptions="StartAndExpand"
                                            VerticalOptions="CenterAndExpand"
                                            TextColor="White"/>
-                                    <local:MyEntry Text="{Binding CurrentAmount, StringFormat='{0:0.0}'}"
+                                    <local:MyEntry Text="{Binding CurrentAmount, StringFormat='{0:0.00}'}"
                                                    Placeholder="Current Amount"
                                                    Grid.Column="1"
                                                    TextColor="White"
@@ -42,7 +42,7 @@
                                                    DisabledColor="White"
                                                    HorizontalOptions="StartAndExpand"
                                                    IsEnabled="False" />
-                                    <local:MyEntry Text="{Binding AmountToAdd, StringFormat='{0:0.0}'}"
+                                    <local:MyEntry Text="{Binding AmountToAdd, StringFormat='{0:0.00}'}"
                                                    Placeholder="Amount to Add"
                                                    HorizontalOptions="Center"
                                                    Grid.Column="2"

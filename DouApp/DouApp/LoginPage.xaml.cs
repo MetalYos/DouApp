@@ -50,7 +50,7 @@ namespace DouApp
             bool tryAgain = true;
             while (tryAgain)
             {
-                if (!await ConnectToBluetoothDevice(App.DeviceName, 1))
+                if (!await ConnectToBluetoothDevice(App.DeviceName, 10))
                 {
                     string answer = await DisplayActionSheet("Couldn't connect to " + App.DeviceName + "! Try again?",
                         "Cancel", null, "Yes", "No");

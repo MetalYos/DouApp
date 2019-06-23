@@ -153,6 +153,9 @@ namespace DouApp.Droid
                         stopWatch.Stop();
                         break;
                     }
+
+                    // Delay for 0.25 seconds (no need to read each cycle)
+                    Thread.Sleep(250);
                 }
                 stopWatch.Stop();
             }

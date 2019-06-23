@@ -55,7 +55,7 @@ namespace DouApp
             }
 
             // Execute command
-            controller.LetsDoh();
+            await controller.LetsDoh(this);
 
             await Navigation.PopAsync();
         }

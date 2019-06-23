@@ -4,8 +4,11 @@ using System.Text;
 
 using DouApp.Models;
 using DouApp.Interfaces;
+using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DouApp.BindingContexts
 {
@@ -385,7 +388,7 @@ namespace DouApp.BindingContexts
 
         // Assumes that it is possible to perform the action
         // (checking if it is possible id done before calling the method)
-        public bool LetsDoh()
+        public async Task<bool> LetsDoh(ContentPage page)
         {
             SaveRecipe();
 
@@ -400,9 +403,65 @@ namespace DouApp.BindingContexts
                 return false;
 
             // Need to wait for confirmation at the end of the execution
+            bool keepListening = true;
+            while (keepListening)
+            {
+                // Show progress bar (maybe)
+
+                // Read string from bluetooth
+                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(60);
+
+                // Check recieved commands
+                if (received.Contains("bowl"))
+                {
+                    // Show Yes/No message.
+                    bool toContinue = await page.DisplayAlert("Continue?", "Bowl was removed from scale! Please place it on the scale and press Yes to continue, or press No to stop.", "Yes", "No");
+                    if (toContinue)
+                    {
+                        // If user chooses yes, send 'y' through bluetooth and continue
+                        DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("y");
+                        keepListening = true;
+                    }
+                    else
+                    {
+                        // else, send 'n' through bluettoth and return false
+                        DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("n");
+                        return false;
+                    }
+                }
+                else if (received.StartsWith("1"))
+                {
+                    // Update first ingredient in convertedRecipe
+                    keepListening = true;
+                }
+                else if (received.StartsWith("2"))
+                {
+                    // Update second ingredient in convertedRecipe
+                    keepListening = true;
+                }
+                else if (received.StartsWith("3"))
+                {
+                    // Update third ingredient in convertedRecipe
+                    keepListening = true;
+                }
+                else if (received.Contains("!"))
+                {
+                    // Doh making is done. Show a message and return true
+                    await page.DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious bake goods", "Ok");
+                    return true;
+                }
+                else
+                {
+                    // Nothing was read, continue
+                    keepListening = false;
+                }
+            }
 
             // At the end, update the amounts in the containers
             UpdateAmountsInContainers();
+
+            // Save the containers
+            App.Containers.SaveContainers();
 
             return true;
         }
@@ -421,7 +480,8 @@ namespace DouApp.BindingContexts
         }
 
         // Creates a recipe that will be used to update the containers
-        // meaning that the amounts of all ingredients are in grams
+        // meaning that the amounts of all dry ingredients are in grams
+        // and the liquid ingredients are in ml
         private void CreateConvertedRecipe()
         {
             convertedRecipe = new UserRecipe();
@@ -476,26 +536,23 @@ namespace DouApp.BindingContexts
         // and the amount of the last 3 ingredients are in tsp
         private void CreateCommandRecipe()
         {
+            if (convertedRecipe == null)
+                CreateConvertedRecipe();
+
             commandRecipe = new UserRecipe();
             commandRecipe.UserID = Recipe.UserID;
             commandRecipe.LastUse = Recipe.LastUse;
 
             commandRecipe.Ingredient1 = Recipe.Ingredient1;
-            commandRecipe.Amount1 = Recipe.Amount1;
-            if (Recipe.Type1 != "gr")
-                commandRecipe.Amount1 = App.Ingredients.ConvertToGr(Recipe.Ingredient1, Recipe.Amount1, Recipe.Type1);
+            commandRecipe.Amount1 = convertedRecipe.Amount1;
             commandRecipe.Type1 = "gr";
 
             commandRecipe.Ingredient2 = Recipe.Ingredient2;
-            commandRecipe.Amount2 = Recipe.Amount2;
-            if (Recipe.Type2 != "gr")
-                commandRecipe.Amount2 = App.Ingredients.ConvertToGr(Recipe.Ingredient2, Recipe.Amount2, Recipe.Type2);
+            commandRecipe.Amount2 = convertedRecipe.Amount2;
             commandRecipe.Type2 = "gr";
 
             commandRecipe.Ingredient3 = Recipe.Ingredient3;
-            commandRecipe.Amount3 = Recipe.Amount3;
-            if (Recipe.Type3 != "gr")
-                commandRecipe.Amount3 = App.Ingredients.ConvertToGr(Recipe.Ingredient3, Recipe.Amount3, Recipe.Type3);
+            commandRecipe.Amount3 = convertedRecipe.Amount3;
             commandRecipe.Type3 = "gr";
 
             commandRecipe.Ingredient4 = Recipe.Ingredient4;
@@ -516,21 +573,26 @@ namespace DouApp.BindingContexts
                 commandRecipe.Amount6 = App.Ingredients.ConvertToTsp(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
             commandRecipe.Type6 = "tsp";
 
-            // Water and Oil in user recipes are always in cup units (no need to convert)
+            commandRecipe.Ingredient7 = Recipe.Ingredient7;
+            commandRecipe.Amount7 = Recipe.Amount7;
+
+            commandRecipe.Ingredient8 = Recipe.Ingredient8;
+            commandRecipe.Amount8 = Recipe.Amount8;
         }
 
         private string CreateCommandString()
         {
             string command = "";
 
+            // Division by 0.25 is done to containers that release 0.25 cup/spoon each time
             command += "f1$" + ((int)(commandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
             command += "f2$" + ((int)(commandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
             command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
-            command += "f4$" + (commandRecipe.Amount4 / 0.25M).ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + (commandRecipe.Amount5 / 0.25M).ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + (commandRecipe.Amount6 / 0.25M).ToString().PadLeft(3, '0') + ";";
-            command += "f7$" + (commandRecipe.Amount7 / 0.25M).ToString().PadLeft(3, '0') + ";";
-            command += "f8$" + (commandRecipe.Amount8 / 0.25M).ToString().PadLeft(3, '0') + ";";
+            command += "f4$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f5$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f6$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f7$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f8$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
