@@ -135,7 +135,7 @@ namespace DouApp.Databases
 
             if (type == "gr")
                 return amount;
-            if (type == "cups")
+            if (type == "cup")
                 return amount * ingredient.Cup;
             if (type == "tsp")
                 return amount * ingredient.Tsp;
@@ -156,6 +156,20 @@ namespace DouApp.Databases
                 return amount; ;
             if (type == "tbsp")
                 return amount * (ingredient.Tbsp / ingredient.Tsp);
+
+            return amount;
+        }
+
+        public decimal ConvertToMl(string ingredientName, decimal amount, string type)
+        {
+            Ingredient ingredient = GetIngredient(ingredientName);
+            if (ingredient == null)
+                return amount;
+
+            if (type == "ml")
+                return amount; ;
+            if (type == "cup")
+                return amount * ingredient.Cup;
 
             return amount;
         }

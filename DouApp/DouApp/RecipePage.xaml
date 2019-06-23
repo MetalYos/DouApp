@@ -12,6 +12,11 @@
             <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
             <StackLayout BackgroundColor="#002670"
                          Padding="20,20,20,20">
+                <Label Text="Recipe is not possible with original ingredients! Select new ingredients from containers and save Recipe, or go back to main screen."
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="CenterAndExpand"
+                       TextColor="White"
+                       IsVisible="{Binding IsPossible, Converter={StaticResource boolInverter}}" />
                 <local:MyEntry x:Name="recipeNameEntry"
                                Placeholder="Name"
                                Text="{Binding Recipe.RecipeName}"
@@ -55,7 +60,7 @@
                                         <Picker.ItemsSource>
                                             <x:Array Type="{x:Type x:String}">
                                                 <x:String>gr</x:String>
-                                                <x:String>cups</x:String>
+                                                <x:String>cup</x:String>
                                             </x:Array>
                                         </Picker.ItemsSource>
                                     </local:MyPicker>
@@ -85,6 +90,7 @@
                     TextColor="White"
                     WidthRequest="280"
                     HorizontalOptions="Center"
+                    IsVisible="{Binding IsPossible}"
                     Clicked="LetsDohRecipeButton_Clicked" />
                 <Button x:Name="saveRecipeButton"
                     Text="Save Recipe"

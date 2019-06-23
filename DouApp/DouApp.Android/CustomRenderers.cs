@@ -33,6 +33,7 @@ namespace DouApp.Droid
                 DrawBorder(Control, entry);
             */
             DrawLine(Control, entry.LineColor.ToAndroid());
+            SetDisabledColors(entry.DisabledColor.ToAndroid());
         }
 
         private void DrawLine(Android.Widget.EditText control, Android.Graphics.Color color)
@@ -41,6 +42,12 @@ namespace DouApp.Droid
                 control.BackgroundTintList = ColorStateList.ValueOf(Android.Graphics.Color.White);
             else
                 control.Background.SetColorFilter(Android.Graphics.Color.White, PorterDuff.Mode.SrcAtop);
+        }
+
+        private void SetDisabledColors(Android.Graphics.Color color)
+        {
+            Control.SetTextColor(Element.IsEnabled ? Element.TextColor.ToAndroid() : color);
+            //Control.SetBackgroundColor(Element.IsEnabled ? Element.BackgroundColor.ToAndroid() : Android.Graphics.Color.DarkGray);
         }
 
         /*

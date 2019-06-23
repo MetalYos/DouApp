@@ -93,6 +93,18 @@ namespace DouApp.Databases
             else
                 containers.Add(new Container(6, containersToDB.Ingredient6, 
                     containersToDB.Amount6, false));
+
+            if (containersToDB.Ingredient7 == null)
+                containers.Add(new Container(7, "Water", 0, false, true));
+            else
+                containers.Add(new Container(7, containersToDB.Ingredient7,
+                    containersToDB.Amount7, false, true));
+
+            if (containersToDB.Ingredient8 == null)
+                containers.Add(new Container(8, "Oil", 0, false, true));
+            else
+                containers.Add(new Container(8, containersToDB.Ingredient8,
+                    containersToDB.Amount8, false, true));
         }
 
         public bool SaveContainers()
@@ -139,6 +151,10 @@ namespace DouApp.Databases
             containersToDB.Amount5 = containers[4].Amount;
             containersToDB.Ingredient6 = containers[5].Ingredient;
             containersToDB.Amount6 = containers[5].Amount;
+            containersToDB.Ingredient7 = containers[6].Ingredient;
+            containersToDB.Amount7 = containers[6].Amount;
+            containersToDB.Ingredient8 = containers[7].Ingredient;
+            containersToDB.Amount8 = containers[7].Amount;
 
             return containersToDB;
         }

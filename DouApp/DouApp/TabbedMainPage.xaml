@@ -72,14 +72,20 @@
                                            HorizontalOptions="StartAndExpand"
                                            VerticalOptions="Center"
                                            TextColor="White"/>
-                                    <Label Text="{Binding Amount}"
+                                    <Label Text="{Binding Amount, StringFormat='{0:0.0}'}"
                                            HorizontalOptions="End"
                                            VerticalOptions="Center"
                                            TextColor="White" />
                                     <Label Text="gr"
                                            HorizontalOptions="Start"
                                            VerticalOptions="Center"
-                                           TextColor="White" />
+                                           TextColor="White"
+                                           IsVisible="{Binding IsLiquid, Converter={StaticResource boolInverter}}"/>
+                                    <Label Text="ml"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Center"
+                                           TextColor="White"
+                                           IsVisible="{Binding IsLiquid}"/>                                    
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>

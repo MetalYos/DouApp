@@ -33,20 +33,33 @@
                                            HorizontalOptions="Start"
                                            VerticalOptions="CenterAndExpand"
                                            TextColor="White"/>
-                                    <local:MyPicker x:Name="largePicker"
-                                                    ItemsSource="{Binding BindingContext.LargeIngredients, Source={x:Reference configurePage}}"
-                                                    ItemDisplayBinding="{Binding ProductName}"
-                                                    SelectedItem="{Binding Ingredient}"
-                                                    IsVisible="{Binding Container.IsLarge}"
-                                                    Grid.Column="1"
-                                                    TextColor="White" />
-                                    <local:MyPicker x:Name="smallPicker"
-                                                    ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
-                                                    ItemDisplayBinding="{Binding ProductName}"
-                                                    SelectedItem="{Binding Ingredient}"
-                                                    IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
-                                                    Grid.Column="1"
-                                                    TextColor="White" />
+                                    <StackLayout Orientation="Horizontal"
+                                                 Grid.Column="1"
+                                                 IsVisible="{Binding Container.IsLiquid, Converter={StaticResource boolInverter}}">
+                                        <local:MyPicker x:Name="largePicker"
+                                                        ItemsSource="{Binding BindingContext.LargeIngredients, Source={x:Reference configurePage}}"
+                                                        ItemDisplayBinding="{Binding ProductName}"
+                                                        SelectedItem="{Binding Ingredient}"
+                                                        IsVisible="{Binding Container.IsLarge}"
+                                                        TextColor="White" />
+                                        <local:MyPicker x:Name="smallPicker"
+                                                        ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
+                                                        ItemDisplayBinding="{Binding ProductName}"
+                                                        SelectedItem="{Binding Ingredient}"
+                                                        IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
+                                                        TextColor="White" />
+                                    </StackLayout>
+                                    <local:MyEntry Text="{Binding Ingredient.ProductName}"
+                                                   Placeholder="Ingredient"
+                                                   HorizontalOptions="Center"
+                                                   Grid.Column="1"
+                                                   TextColor="White"
+                                                   PlaceholderColor="White"
+                                                   LineColor="White"
+                                                   DisabledColor="White"
+                                                   VerticalOptions="StartAndExpand"
+                                                   IsEnabled="False"
+                                                   IsVisible="{Binding Container.IsLiquid}"/>
                                     <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.0}'}"
                                                    Placeholder="Amount"
                                                    HorizontalOptions="Center"
@@ -58,7 +71,14 @@
                                            HorizontalOptions="Start"
                                            VerticalOptions="CenterAndExpand"
                                            Grid.Column="3"
-                                           TextColor="White"/>
+                                           TextColor="White"
+                                           IsVisible="{Binding Container.IsLiquid, Converter={StaticResource boolInverter}}"/>
+                                    <Label Text="ml"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="CenterAndExpand"
+                                           Grid.Column="3"
+                                           TextColor="White"
+                                           IsVisible="{Binding Container.IsLiquid}"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

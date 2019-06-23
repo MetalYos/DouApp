@@ -6,7 +6,7 @@ using DouApp.Models;
 
 namespace DouApp.BindingContexts
 {
-    public class ContainerAndID
+    public class ContainerForView
     {
         public Container Container { get; set; }
         public Ingredient Ingredient{ get; set; }
@@ -15,7 +15,7 @@ namespace DouApp.BindingContexts
 
     public class ConfigurePageController
     {
-        public List<ContainerAndID> Containers { get; set; }
+        public List<ContainerForView> Containers { get; set; }
         public List<Ingredient> LargeIngredients { get; set; }
         public List<Ingredient> SmallIngredients { get; set; }
 
@@ -25,10 +25,10 @@ namespace DouApp.BindingContexts
             SmallIngredients = App.Ingredients.GetIngredientsByMeasuringType("tsp");
 
             List<Container> containers = App.Containers.GetContainers();
-            Containers = new List<ContainerAndID>();
+            Containers = new List<ContainerForView>();
             foreach (var container in containers)
             {
-                Containers.Add(new ContainerAndID
+                Containers.Add(new ContainerForView
                 {
                     Container = container,
                     Ingredient = App.Ingredients.GetIngredient(container.Ingredient),

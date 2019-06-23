@@ -70,13 +70,19 @@ namespace DouApp
                 if (!CheckIfRecipeIsPossible(recipe))
                 {
                     await DisplayAlert("Recipe not supported", "Current machine configuration does not support selected recipe", "OK");
-                    return;
+
+                    await Navigation.PushAsync(new RecipePage
+                    {
+                        BindingContext = new RecipePageController(recipe, false, false)
+                    });
                 }
-                
-                await Navigation.PushAsync(new RecipePage
+                else
                 {
-                    BindingContext = new RecipePageController(recipe, false)
-                });
+                    await Navigation.PushAsync(new RecipePage
+                    {
+                        BindingContext = new RecipePageController(recipe, false)
+                    });
+                }
             }
         }
 

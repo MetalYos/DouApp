@@ -34,16 +34,18 @@ namespace DouApp.BindingContexts
         #region Properties
         // Is the recipe new or one from history
         public bool IsNew { get; set; }
+        public bool IsPossible { get; set; }
         public List<Container> Containers { get; set; }
         public UserRecipe Recipe { get; set; }
         public List<RecipeIngredientsList> Ingredients { get; set; }
         #endregion
 
-        public RecipePageController(UserRecipe recipe, bool isNew = false)
+        public RecipePageController(UserRecipe recipe, bool isNew = false, bool isPossible = true)
         {
             Containers = App.Containers.GetContainers();
             Recipe = UpdateRecipeOrderToContainers(recipe);
             IsNew = isNew;
+            IsPossible = isPossible;
 
             if (IsNew)
                 InitNewUserRecipe();
@@ -177,7 +179,7 @@ namespace DouApp.BindingContexts
         private int GetUnitsIndex(string type)
         {
             if (type == "gr" || type == "tsp") return 0;
-            if (type == "cups" || type == "tbsp") return 1;
+            if (type == "cup" || type == "tbsp") return 1;
             else return 2;
         }
 
@@ -187,7 +189,7 @@ namespace DouApp.BindingContexts
             if (isLarge)
             {
                 if (index == 0) return "gr";
-                else return "cups";
+                else return "cup";
             }
             else
             {

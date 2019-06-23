@@ -27,6 +27,10 @@ namespace DouApp.Models
         public string Ingredient6 { get; set; }
         public decimal Amount6 { get; set; }
         public string Type6 { get; set; }
+        public string Ingredient7 { get; set; }
+        public decimal Amount7 { get; set; }
+        public string Ingredient8 { get; set; }
+        public decimal Amount8 { get; set; }
 
         public static int CompareByLastUse(UserRecipe a, UserRecipe b)
         {

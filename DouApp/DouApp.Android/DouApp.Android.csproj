@@ -21,10 +21,10 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>C:\Users\metal\Documents\dou.keystore</AndroidSigningKeyStore>
-    <AndroidSigningStorePass>654321</AndroidSigningStorePass>
-    <AndroidSigningKeyAlias>douapp</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>654321</AndroidSigningKeyPass>
+    <AndroidSigningKeyStore>C:\Users\metal\Documents\dou2.keystore</AndroidSigningKeyStore>
+    <AndroidSigningStorePass>123456</AndroidSigningStorePass>
+    <AndroidSigningKeyAlias>douapp2</AndroidSigningKeyAlias>
+    <AndroidSigningKeyPass>123456</AndroidSigningKeyPass>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
