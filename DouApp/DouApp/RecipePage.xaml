@@ -56,9 +56,10 @@
                                                  IsVisible="{Binding IsLiquid, Converter={StaticResource boolInverter}}"
                                                  Grid.Column="2">
                                         <local:MyPicker Title="Unit"
-                                                    TextColor="White"
-                                                    IsVisible="{Binding IsLarge}"
-                                                    SelectedIndex="{Binding UnitsIndex}">
+                                                        TextColor="White"
+                                                        LineColor="White"
+                                                        IsVisible="{Binding IsLarge}"
+                                                        SelectedIndex="{Binding UnitsIndex}">
                                             <Picker.ItemsSource>
                                                 <x:Array Type="{x:Type x:String}">
                                                     <x:String>gr</x:String>
@@ -67,9 +68,10 @@
                                             </Picker.ItemsSource>
                                         </local:MyPicker>
                                         <local:MyPicker Title="Unit"
-                                                    TextColor="White"
-                                                    IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
-                                                    SelectedIndex="{Binding UnitsIndex}">
+                                                        TextColor="White"
+                                                        LineColor="White"
+                                                        IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
+                                                        SelectedIndex="{Binding UnitsIndex}">
                                             <Picker.ItemsSource>
                                                 <x:Array Type="{x:Type x:String}">
                                                     <x:String>tsp</x:String>

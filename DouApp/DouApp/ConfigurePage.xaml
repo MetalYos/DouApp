@@ -42,14 +42,18 @@
                                                         SelectedItem="{Binding Ingredient}"
                                                         IsVisible="{Binding Container.IsLarge}"
                                                         TextColor="White"
-                                                        LineColor="White"/>
+                                                        LineColor="White"
+                                                        HorizontalOptions="StartAndExpand"
+                                                        FontSize="Small"/>
                                         <local:MyPicker x:Name="smallPicker"
                                                         ItemsSource="{Binding BindingContext.SmallIngredients, Source={x:Reference configurePage}}"
                                                         ItemDisplayBinding="{Binding ProductName}"
                                                         SelectedItem="{Binding Ingredient}"
                                                         IsVisible="{Binding Container.IsLarge, Converter={StaticResource boolInverter}}"
                                                         TextColor="White"
-                                                        LineColor="White"/>
+                                                        LineColor="White"
+                                                        HorizontalOptions="StartAndExpand"
+                                                        FontSize="Small"/>
                                     </StackLayout>
                                     <local:MyEntry Text="{Binding Ingredient.ProductName}"
                                                    Placeholder="Ingredient"

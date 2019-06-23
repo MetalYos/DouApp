@@ -29,7 +29,12 @@ namespace DouApp.iOS
             throw new NotImplementedException();
         }
 
-        public void WriteBufferToDevice(byte[] buffer)
+        public Task<string> ReadStringFromDevice(int maxSeconds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteStringToDevice(string message)
         {
             throw new NotImplementedException();
         }
