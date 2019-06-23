@@ -51,13 +51,12 @@
                                     </StackLayout>
                                     <local:MyEntry Text="{Binding Ingredient.ProductName}"
                                                    Placeholder="Ingredient"
-                                                   HorizontalOptions="Center"
                                                    Grid.Column="1"
                                                    TextColor="White"
                                                    PlaceholderColor="White"
                                                    LineColor="White"
                                                    DisabledColor="White"
-                                                   VerticalOptions="StartAndExpand"
+                                                   HorizontalOptions="StartAndExpand"
                                                    IsEnabled="False"
                                                    IsVisible="{Binding Container.IsLiquid}"/>
                                     <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.0}'}"

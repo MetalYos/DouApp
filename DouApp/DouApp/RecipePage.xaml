@@ -52,9 +52,11 @@
                                                    Placeholder="Amount"
                                                    TextColor="White"
                                                    Grid.Column="1"/>
-                                    <local:MyPicker Title="Unit"
+                                    <StackLayout Orientation="Horizontal"
+                                                 IsVisible="{Binding IsLiquid, Converter={StaticResource boolInverter}}"
+                                                 Grid.Column="2">
+                                        <local:MyPicker Title="Unit"
                                                     TextColor="White"
-                                                    Grid.Column="2"
                                                     IsVisible="{Binding IsLarge}"
                                                     SelectedIndex="{Binding UnitsIndex}">
                                         <Picker.ItemsSource>
@@ -63,19 +65,27 @@
                                                 <x:String>cup</x:String>
                                             </x:Array>
                                         </Picker.ItemsSource>
-                                    </local:MyPicker>
-                                    <local:MyPicker Title="Unit"
+                                        </local:MyPicker>
+                                        <local:MyPicker Title="Unit"
                                                     TextColor="White"
-                                                    Grid.Column="2"
                                                     IsVisible="{Binding IsLarge, Converter={StaticResource boolInverter}}"
                                                     SelectedIndex="{Binding UnitsIndex}">
-                                        <Picker.ItemsSource>
-                                            <x:Array Type="{x:Type x:String}">
-                                                <x:String>tsp</x:String>
-                                                <x:String>tbsp</x:String>
-                                            </x:Array>
-                                        </Picker.ItemsSource>
-                                    </local:MyPicker>
+                                            <Picker.ItemsSource>
+                                                <x:Array Type="{x:Type x:String}">
+                                                    <x:String>tsp</x:String>
+                                                    <x:String>tbsp</x:String>
+                                                </x:Array>
+                                            </Picker.ItemsSource>
+                                        </local:MyPicker>
+                                    </StackLayout>
+                                    <local:MyEntry Text="cup"
+                                                   HorizontalOptions="StartAndExpand"
+                                                   Grid.Column="2"
+                                                   TextColor="White"
+                                                   LineColor="White"
+                                                   DisabledColor="White"
+                                                   IsEnabled="False"
+                                                   IsVisible="{Binding IsLiquid}"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

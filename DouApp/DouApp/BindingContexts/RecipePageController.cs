@@ -16,6 +16,7 @@ namespace DouApp.BindingContexts
         public decimal Amount { get; set; }
         public int UnitsIndex { get; set; }
         public bool IsLarge { get; set; }
+        public bool IsLiquid { get; set; }
     }
 
     public class IngredientAmountToFill
@@ -86,6 +87,12 @@ namespace DouApp.BindingContexts
             newRecipe.Amount6 = GetIngredientAmountFromContainer(newRecipe.Ingredient6, recipe);
             newRecipe.Type6 = GetIngredientTypeFromContainer(newRecipe.Ingredient6, recipe);
 
+            newRecipe.Ingredient7 = Containers[6].Ingredient;
+            newRecipe.Amount7 = GetIngredientAmountFromContainer(newRecipe.Ingredient7, recipe);
+
+            newRecipe.Ingredient8 = Containers[7].Ingredient;
+            newRecipe.Amount8 = GetIngredientAmountFromContainer(newRecipe.Ingredient8, recipe);
+
             return newRecipe;
         }
 
@@ -104,6 +111,10 @@ namespace DouApp.BindingContexts
                 return userRecipe.Amount5;
             if (containerIngredient == userRecipe.Ingredient6)
                 return userRecipe.Amount6;
+            if (containerIngredient == userRecipe.Ingredient7)
+                return userRecipe.Amount7;
+            if (containerIngredient == userRecipe.Ingredient8)
+                return userRecipe.Amount8;
 
             return 0;
         }
@@ -123,6 +134,10 @@ namespace DouApp.BindingContexts
                 return userRecipe.Type5;
             if (containerIngredient == userRecipe.Ingredient6)
                 return userRecipe.Type6;
+            if (containerIngredient == userRecipe.Ingredient7)
+                return "cup";
+            if (containerIngredient == userRecipe.Ingredient8)
+                return "cup";
 
             return "gr";
         }
@@ -136,42 +151,64 @@ namespace DouApp.BindingContexts
                 ProductName = Recipe.Ingredient1,
                 Amount = Recipe.Amount1,
                 UnitsIndex = GetUnitsIndex(Recipe.Type1),
-                IsLarge = Containers[0].IsLarge
+                IsLarge = Containers[0].IsLarge,
+                IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
                 ProductName = Recipe.Ingredient2,
                 Amount = Recipe.Amount2,
                 UnitsIndex = GetUnitsIndex(Recipe.Type2),
-                IsLarge = Containers[1].IsLarge
+                IsLarge = Containers[1].IsLarge,
+                IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
                 ProductName = Recipe.Ingredient3,
                 Amount = Recipe.Amount3,
                 UnitsIndex = GetUnitsIndex(Recipe.Type3),
-                IsLarge = Containers[2].IsLarge
+                IsLarge = Containers[2].IsLarge,
+                IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
                 ProductName = Recipe.Ingredient4,
                 Amount = Recipe.Amount4,
                 UnitsIndex = GetUnitsIndex(Recipe.Type4),
-                IsLarge = Containers[3].IsLarge
+                IsLarge = Containers[3].IsLarge,
+                IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
                 ProductName = Recipe.Ingredient5,
                 Amount = Recipe.Amount5,
                 UnitsIndex = GetUnitsIndex(Recipe.Type5),
-                IsLarge = Containers[4].IsLarge
+                IsLarge = Containers[4].IsLarge,
+                IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
                 ProductName = Recipe.Ingredient6,
                 Amount = Recipe.Amount6,
                 UnitsIndex = GetUnitsIndex(Recipe.Type6),
-                IsLarge = Containers[5].IsLarge
+                IsLarge = Containers[5].IsLarge,
+                IsLiquid = false
+            });
+            Ingredients.Add(new RecipeIngredientsList()
+            {
+                ProductName = Recipe.Ingredient7,
+                Amount = Recipe.Amount7,
+                UnitsIndex = 0,
+                IsLarge = true,
+                IsLiquid = true
+            });
+            Ingredients.Add(new RecipeIngredientsList()
+            {
+                ProductName = Recipe.Ingredient8,
+                Amount = Recipe.Amount8,
+                UnitsIndex = 0,
+                IsLarge = true,
+                IsLiquid = true
             });
         }
 
@@ -219,6 +256,10 @@ namespace DouApp.BindingContexts
 
             Recipe.Amount6 = Ingredients[5].Amount;
             Recipe.Type6 = GetUnitFromIndex(Ingredients[5].UnitsIndex, Ingredients[5].IsLarge);
+
+            Recipe.Amount7 = Ingredients[6].Amount;
+
+            Recipe.Amount8 = Ingredients[7].Amount;
         }
 
         // If the user pressed on new recipe, this method initializes the new recipe
@@ -246,6 +287,10 @@ namespace DouApp.BindingContexts
             Recipe.Ingredient6 = Containers[5].Ingredient;
             Recipe.Amount6 = 0;
             Recipe.Type6 = "tsp";
+            Recipe.Ingredient7 = Containers[6].Ingredient;
+            Recipe.Amount7 = 0;
+            Recipe.Ingredient8 = Containers[7].Ingredient;
+            Recipe.Amount8 = 0;
         }
 
         // Check if it is possible (if requested amounts are smaller than amounts in containers)
@@ -311,6 +356,26 @@ namespace DouApp.BindingContexts
                 ingredients.Add(new IngredientAmountToFill()
                 {
                     ProductName = convertedRecipe.Ingredient6,
+                    AmountToFill = -diff
+                });
+            }
+
+            diff = Containers[6].Amount - convertedRecipe.Amount7;
+            if (diff < 0)
+            {
+                ingredients.Add(new IngredientAmountToFill()
+                {
+                    ProductName = convertedRecipe.Ingredient7,
+                    AmountToFill = -diff
+                });
+            }
+
+            diff = Containers[7].Amount - convertedRecipe.Amount8;
+            if (diff < 0)
+            {
+                ingredients.Add(new IngredientAmountToFill()
+                {
+                    ProductName = convertedRecipe.Ingredient8,
                     AmountToFill = -diff
                 });
             }
@@ -398,6 +463,12 @@ namespace DouApp.BindingContexts
             if (Recipe.Type6 != "gr")
                 convertedRecipe.Amount6 = App.Ingredients.ConvertToGr(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
             convertedRecipe.Type6 = "gr";
+
+            convertedRecipe.Ingredient7 = Recipe.Ingredient7;
+            convertedRecipe.Amount7 = App.Ingredients.ConvertToMl(Recipe.Ingredient7, Recipe.Amount7);
+
+            convertedRecipe.Ingredient8 = Recipe.Ingredient8;
+            convertedRecipe.Amount8 = App.Ingredients.ConvertToMl(Recipe.Ingredient8, Recipe.Amount8);
         }
 
         // Creates a recipe that will be used to create the command to send to the machine
@@ -444,6 +515,8 @@ namespace DouApp.BindingContexts
             if (Recipe.Type6 != "tsp")
                 commandRecipe.Amount6 = App.Ingredients.ConvertToTsp(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
             commandRecipe.Type6 = "tsp";
+
+            // Water and Oil in user recipes are always in cup units (no need to convert)
         }
 
         private string CreateCommandString()
@@ -453,9 +526,11 @@ namespace DouApp.BindingContexts
             command += "f1$" + ((int)(commandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
             command += "f2$" + ((int)(commandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
             command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
-            command += "f4$" + commandRecipe.Amount4.ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + commandRecipe.Amount5.ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + commandRecipe.Amount6.ToString().PadLeft(3, '0') + ";";
+            command += "f4$" + (commandRecipe.Amount4 / 0.25M).ToString().PadLeft(3, '0') + ";";
+            command += "f5$" + (commandRecipe.Amount5 / 0.25M).ToString().PadLeft(3, '0') + ";";
+            command += "f6$" + (commandRecipe.Amount6 / 0.25M).ToString().PadLeft(3, '0') + ";";
+            command += "f7$" + (commandRecipe.Amount7 / 0.25M).ToString().PadLeft(3, '0') + ";";
+            command += "f8$" + (commandRecipe.Amount8 / 0.25M).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
@@ -469,6 +544,8 @@ namespace DouApp.BindingContexts
             App.Containers.RemoveFromContainer(4, convertedRecipe.Amount4);
             App.Containers.RemoveFromContainer(5, convertedRecipe.Amount5);
             App.Containers.RemoveFromContainer(6, convertedRecipe.Amount6);
+            App.Containers.RemoveFromContainer(7, convertedRecipe.Amount7);
+            App.Containers.RemoveFromContainer(8, convertedRecipe.Amount8);
         }
     }
 }

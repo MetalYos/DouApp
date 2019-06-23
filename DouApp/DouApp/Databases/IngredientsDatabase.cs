@@ -160,7 +160,7 @@ namespace DouApp.Databases
             return amount;
         }
 
-        public decimal ConvertToMl(string ingredientName, decimal amount, string type)
+        public decimal ConvertToMl(string ingredientName, decimal amount, string type = "cup")
         {
             Ingredient ingredient = GetIngredient(ingredientName);
             if (ingredient == null)
