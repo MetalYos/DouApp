@@ -155,6 +155,16 @@
                         HorizontalOptions="Center"
                         VerticalOptions="End"
                         Clicked="ConfigureContainersButton_Clicked" />
+                <Button x:Name="addToContainersButton" 
+                        Text="Add to Containers"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        Clicked="AddToContainersButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage>

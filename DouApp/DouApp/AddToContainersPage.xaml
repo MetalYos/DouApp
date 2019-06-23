@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DouApp.CustomControls;assembly=DouApp"
+             x:Class="DouApp.AddToContainersPage"
+             x:Name="addToContainersPage" >
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+            <StackLayout BackgroundColor="#002670"
+                         Padding="20,20,20,20">
+                <Label Text="Add to containers (Current Amount, Amount to Add)"
+                       FontSize="Medium"
+                       VerticalOptions="CenterAndExpand" 
+                       HorizontalOptions="StartAndExpand"
+                       TextColor="White"/>
+                <!-- Containers -->
+                <ListView x:Name="containersListView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="3*" />
+                                        <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Text="{Binding GenericName}"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="CenterAndExpand"
+                                           TextColor="White"/>
+                                    <local:MyEntry Text="{Binding CurrentAmount, StringFormat='{0:0.0}'}"
+                                                   Placeholder="Current Amount"
+                                                   Grid.Column="1"
+                                                   TextColor="White"
+                                                   PlaceholderColor="White"
+                                                   LineColor="White"
+                                                   DisabledColor="White"
+                                                   HorizontalOptions="StartAndExpand"
+                                                   IsEnabled="False" />
+                                    <local:MyEntry Text="{Binding AmountToAdd, StringFormat='{0:0.0}'}"
+                                                   Placeholder="Amount to Add"
+                                                   HorizontalOptions="Center"
+                                                   Grid.Column="2"
+                                                   TextColor="White"
+                                                   PlaceholderColor="White"
+                                                   LineColor="White"/>
+                                    <Label Text="gr"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="CenterAndExpand"
+                                           Grid.Column="3"
+                                           TextColor="White"
+                                           IsVisible="{Binding IsLiquid, Converter={StaticResource boolInverter}}"/>
+                                    <Label Text="ml"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="CenterAndExpand"
+                                           Grid.Column="3"
+                                           TextColor="White"
+                                           IsVisible="{Binding IsLiquid}"/>
+                                </Grid>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!-- Save Button -->
+                <Button x:Name="saveContainersButton"
+                        Text="Save"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        Clicked="SaveContainersButton_Clicked"/>
+                <!-- Cancel Button -->
+                <Button x:Name="cancelContainersButton"
+                        Text="Cancel!"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        Clicked="CancelContainersButton_Clicked"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

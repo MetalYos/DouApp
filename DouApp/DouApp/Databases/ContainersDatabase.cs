@@ -197,6 +197,11 @@ namespace DouApp.Databases
             return true;
         }
 
+        public void AddToContainer(int id, decimal amountToAdd)
+        {
+            GetContainer(id).Amount += amountToAdd;
+        }
+
         public void UpdateContainerIngredient(int id, string ingredient)
         {
             GetContainer(id).Ingredient = ingredient;

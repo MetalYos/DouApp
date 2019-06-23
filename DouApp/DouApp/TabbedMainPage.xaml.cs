@@ -128,5 +128,13 @@ namespace DouApp
 
             return ingredientIn;
         }
+
+        private async void AddToContainersButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AddToContainersPage
+            {
+                BindingContext = new AddToContainersPageController()
+            });
+        }
     }
 }

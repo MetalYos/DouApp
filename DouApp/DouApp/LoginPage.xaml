@@ -6,7 +6,7 @@
     <ContentPage.Content>
         <StackLayout Margin="20,35,20,20"
                      BackgroundColor="#002060">
-            <Image Source="Logo.png" HeightRequest="200"/>
+            <Image Source="logo.png" HeightRequest="200"/>
             <Label VerticalOptions="Center"
                    HorizontalOptions="CenterAndExpand"
                    HeightRequest="40" />
