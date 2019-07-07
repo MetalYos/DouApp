@@ -390,21 +390,23 @@ namespace DouApp.BindingContexts
         // (checking if it is possible id done before calling the method)
         public async Task<bool> LetsDoh(ContentPage page)
         {
+            // Save the recipe in the database
             SaveRecipe();
 
+            // Create the command recipe from which the command string is created
             CreateCommandRecipe();
 
-            // Start execution - create command string and send it via bluetooth
+            // Create command string and send it via bluetooth
             string command = CreateCommandString();
-            // Start execution - send command via bluetooth
+
+            // Send command via bluetooth
             if (DependencyService.Get<IBluetoothHelper>().IsConnected())
                 DependencyService.Get<IBluetoothHelper>().WriteStringToDevice(command);
             else
                 return false;
 
-            // Need to wait for confirmation at the end of the execution
-            bool keepListening = true;
-            while (keepListening)
+            // This loop will run untill the command is finished, bowl is removed or user sends stop
+            while (true)
             {
                 // Show progress bar (maybe)
 
@@ -420,7 +422,6 @@ namespace DouApp.BindingContexts
                     {
                         // If user chooses yes, send 'y' through bluetooth and continue
                         DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("y");
-                        keepListening = true;
                     }
                     else
                     {
@@ -431,39 +432,40 @@ namespace DouApp.BindingContexts
                 }
                 else if (received.StartsWith("1"))
                 {
-                    // Update first ingredient in convertedRecipe
-                    keepListening = true;
+                    // Remove given amount from the appropriate container
+                    // We do this now in case the user removed bowl after 
+                    // one of the large containers was opened.
+                    UpdateLargeContainer(received);
                 }
                 else if (received.StartsWith("2"))
                 {
-                    // Update second ingredient in convertedRecipe
-                    keepListening = true;
+                    // Remove given amount from the appropriate container
+                    UpdateLargeContainer(received);
                 }
                 else if (received.StartsWith("3"))
                 {
-                    // Update third ingredient in convertedRecipe
-                    keepListening = true;
+                    // Remove given amount from the appropriate container
+                    UpdateLargeContainer(received);
                 }
                 else if (received.Contains("!"))
                 {
-                    // Doh making is done. Show a message and return true
-                    await page.DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious bake goods", "Ok");
+                    // Doh making is done, update the amounts in the containers
+                    UpdateAmountsInContainers();
+
+                    // Show a message and return true
+                    await page.DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious baked goods", "Ok");
                     return true;
+                }
+                else if (received.Contains("stop"))
+                {
+                    return false;
                 }
                 else
                 {
-                    // Nothing was read, continue
-                    keepListening = false;
+                    // Nothing was read, continue to next iteration
+                    continue;
                 }
             }
-
-            // At the end, update the amounts in the containers
-            UpdateAmountsInContainers();
-
-            // Save the containers
-            App.Containers.SaveContainers();
-
-            return true;
         }
 
         public void SaveRecipe()
@@ -585,29 +587,42 @@ namespace DouApp.BindingContexts
             string command = "";
 
             // Division by 0.25 is done to containers that release 0.25 cup/spoon each time
+            command += "f3$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f1$" + ((int)(commandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
+            command += "f4$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f2$" + ((int)(commandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
-            command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
-            command += "f4$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f7$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f8$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f5$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            //command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
+            command += "f6$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f7$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
         }
 
-        private void UpdateAmountsInContainers()
+        private void UpdateAmountsInContainers(bool notLarge = true)
         {
-            App.Containers.RemoveFromContainer(1, convertedRecipe.Amount1);
-            App.Containers.RemoveFromContainer(2, convertedRecipe.Amount2);
-            App.Containers.RemoveFromContainer(3, convertedRecipe.Amount3);
+            if (!notLarge)
+            {
+                App.Containers.RemoveFromContainer(1, convertedRecipe.Amount1);
+                App.Containers.RemoveFromContainer(2, convertedRecipe.Amount2);
+                App.Containers.RemoveFromContainer(3, convertedRecipe.Amount3);
+            }
             App.Containers.RemoveFromContainer(4, convertedRecipe.Amount4);
             App.Containers.RemoveFromContainer(5, convertedRecipe.Amount5);
             App.Containers.RemoveFromContainer(6, convertedRecipe.Amount6);
             App.Containers.RemoveFromContainer(7, convertedRecipe.Amount7);
             App.Containers.RemoveFromContainer(8, convertedRecipe.Amount8);
+
+            App.Containers.SaveContainers();
+        }
+
+        private void UpdateLargeContainer(string received)
+        {
+            int container = int.Parse(received.Substring(0, 1));
+            decimal weight = decimal.Parse(received.Substring(2, 3));
+            App.Containers.RemoveFromContainer(container, weight);
+            App.Containers.SaveContainers();
         }
     }
 }

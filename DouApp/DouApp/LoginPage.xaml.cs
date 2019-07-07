@@ -50,7 +50,7 @@ namespace DouApp
             bool tryAgain = true;
             while (tryAgain)
             {
-                if (!await ConnectToBluetoothDevice(App.DeviceName, 10))
+                if (!await ConnectToBluetoothDevice(App.DeviceName, 30))
                 {
                     string answer = await DisplayActionSheet("Couldn't connect to " + App.DeviceName + "! Try again?",
                         "Cancel", null, "Yes", "No");
@@ -58,6 +58,8 @@ namespace DouApp
                     else if (answer == "No") tryAgain = false;
                     else return;
                 }
+                else
+                    tryAgain = false;
             }
 
             //App.UserID = 5;
@@ -88,9 +90,9 @@ namespace DouApp
             }
 
             if (numTimes == 0)
-                return true;
-            else
                 return false;
+            else
+                return true;
         }
     }
 }
