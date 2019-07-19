@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DouApp.CustomControls;assembly=DouApp"
+             x:Name="progressPage"
+             x:Class="DouApp.ProgressPage">
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="FillAndExpand"
+                     VerticalOptions="FillAndExpand"
+                     BackgroundColor="#002060"
+                     Padding="20,10,20,20">
+            <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
+            <StackLayout BackgroundColor="#002670"
+                         Padding="20,20,20,20">
+                <Label Text="Preparing Dough!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

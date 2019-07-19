@@ -51,6 +51,9 @@ namespace DouApp.BindingContexts
             IsNew = isNew;
             IsPossible = isPossible;
 
+            // TODO: If it is a new Recipe, select the ingredients that are in the containers
+            // otherwise show them as is (after updating the recipe to be as the containers).
+
             if (IsNew)
                 InitNewUserRecipe();
 
@@ -390,9 +393,6 @@ namespace DouApp.BindingContexts
         // (checking if it is possible id done before calling the method)
         public async Task<bool> LetsDoh(ContentPage page)
         {
-            // Save the recipe in the database
-            SaveRecipe();
-
             // Create the command recipe from which the command string is created
             CreateCommandRecipe();
 
@@ -447,7 +447,7 @@ namespace DouApp.BindingContexts
                     // Remove given amount from the appropriate container
                     UpdateLargeContainer(received);
                 }
-                else if (received.Contains("!"))
+                else if (received.Contains("done"))
                 {
                     // Doh making is done, update the amounts in the containers
                     UpdateAmountsInContainers();
@@ -587,14 +587,15 @@ namespace DouApp.BindingContexts
             string command = "";
 
             // Division by 0.25 is done to containers that release 0.25 cup/spoon each time
-            command += "f3$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            // order of containers on the machine is 4 -> 1 -> 5 -> 2 -> 6 -> 7 -> 8
+            command += "f4$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f1$" + ((int)(commandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
-            command += "f4$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f5$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f2$" + ((int)(commandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f6$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f7$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f8$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             //command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f7$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
@@ -620,7 +621,14 @@ namespace DouApp.BindingContexts
         private void UpdateLargeContainer(string received)
         {
             int container = int.Parse(received.Substring(0, 1));
-            decimal weight = decimal.Parse(received.Substring(2, 3));
+
+            int startIndex = 2;
+            int i = startIndex;
+            while (received[i] != ';')
+                i++;
+            int length = (i - 1) - startIndex + 1;
+            
+            decimal weight = decimal.Parse(received.Substring(startIndex, length));
             App.Containers.RemoveFromContainer(container, weight);
             App.Containers.SaveContainers();
         }

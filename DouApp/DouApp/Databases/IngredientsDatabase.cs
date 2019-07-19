@@ -11,7 +11,7 @@ namespace DouApp.Databases
     public class IngredientsDatabase
     {
         string conversionTableUrl = @"https://dohconverter.azurewebsites.net/api/GetConvTable";
-        decimal tspToGr = 4.26M;
+        //decimal tspToGr = 4.26M;
         List<Ingredient> ingredients;
 
         public IngredientsDatabase()
@@ -33,33 +33,6 @@ namespace DouApp.Databases
                 ingredients = JsonConvert.DeserializeObject<List<Ingredient>>(result.ToString());
             }
         }
-
-        /*
-        private void PopulateDatabase()
-        {
-            ingredients.Add(new Ingredient("Flour"));
-            ingredients.Add(new Ingredient("Whole Flour"));
-            ingredients.Add(new Ingredient("Cornflour"));
-            ingredients.Add(new Ingredient("Cacao"));
-            ingredients.Add(new Ingredient("Cream Wheat"));
-            ingredients.Add(new Ingredient("White Sugar"));
-            ingredients.Add(new Ingredient("Brown Sugar"));
-            ingredients.Add(new Ingredient("Damrara Sugar"));
-            ingredients.Add(new Ingredient("Powder Sugar"));
-            ingredients.Add(new Ingredient("Almonds"));
-            ingredients.Add(new Ingredient("Poppyseed"));
-            ingredients.Add(new Ingredient("Nuts Powder"));
-            ingredients.Add(new Ingredient("Coconut"));
-            ingredients.Add(new Ingredient("Instant Pudding Vanila"));
-            ingredients.Add(new Ingredient("Salt", "tsp"));
-            ingredients.Add(new Ingredient("Baking Powder", "tsp"));
-            ingredients.Add(new Ingredient("Soda Powder", "tsp"));
-            ingredients.Add(new Ingredient("Yeast", "tsp"));
-            ingredients.Add(new Ingredient("Gelatin Powder", "tsp"));
-            ingredients.Add(new Ingredient("Cinnamon", "tsp"));
-            ingredients.Add(new Ingredient("Nes Cafe", "tsp"));
-        }
-        */
 
         public bool ContainsIngredient(Ingredient ingredient)
         {

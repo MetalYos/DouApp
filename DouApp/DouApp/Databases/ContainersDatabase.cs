@@ -14,7 +14,7 @@ namespace DouApp.Databases
     {
         string setContainersUrl = @"https://dohconverter.azurewebsites.net/api/SetContainers";
         string getContainersUrl = @"https://dohconverter.azurewebsites.net/api/GetContainers";
-        string updateAmountsUrl;
+        //string updateAmountsUrl;
         List<Container> containers;
 
         public ContainersDatabase()

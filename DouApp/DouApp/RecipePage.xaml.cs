@@ -33,6 +33,8 @@ namespace DouApp
         async private void LetsDohRecipeButton_Clicked(object sender, EventArgs e)
         {
             var controller = BindingContext as RecipePageController;
+            if (controller == null)
+                return;
 
             if (recipeNameEntry.Text == string.Empty)
             {
@@ -40,6 +42,10 @@ namespace DouApp
                 return;
             }
 
+            // TODO: check if the ingredients are in the containers
+
+            // Check if it is possible to make the dough, if not show an error message
+            // and return
             var ingredientsToFill = controller.CheckIfPossible();
             if (ingredientsToFill.Count > 0)
             {
@@ -54,7 +60,10 @@ namespace DouApp
                 return;
             }
 
-            // Execute command
+            // First save the recipe
+            controller.SaveRecipe();
+
+            // Than start the process
             await controller.LetsDoh(this);
 
             await Navigation.PopAsync();
@@ -69,7 +78,6 @@ namespace DouApp
             }
 
             var controller = BindingContext as RecipePageController;
-
             if (controller == null)
                 return;
 
