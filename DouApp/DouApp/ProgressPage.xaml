@@ -15,6 +15,8 @@
                 <Label Text="Preparing Dough!"
                 VerticalOptions="CenterAndExpand" 
                 HorizontalOptions="CenterAndExpand" />
+                <ProgressBar x:Name="progressBar"
+                             Progress="0" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

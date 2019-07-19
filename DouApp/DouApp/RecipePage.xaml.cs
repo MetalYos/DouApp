@@ -44,8 +44,8 @@ namespace DouApp
 
             // TODO: check if the ingredients are in the containers
 
-            // Check if it is possible to make the dough, if not show an error message
-            // and return
+            // Check if it is possible to make the dough, if not show an error message and return
+            controller.CreateConvertedRecipe();
             var ingredientsToFill = controller.CheckIfPossible();
             if (ingredientsToFill.Count > 0)
             {
@@ -60,13 +60,22 @@ namespace DouApp
                 return;
             }
 
-            // First save the recipe
+            // Save the recipe
             controller.SaveRecipe();
 
-            // Than start the process
-            await controller.LetsDoh(this);
+            // Create the command recipe in order to pass it to the Progress Page
+            controller.CreateCommandRecipe();
 
-            await Navigation.PopAsync();
+            //await controller.LetsDoh(this);
+
+            // Move on to the Progress Page
+            await Navigation.PushAsync(new ProgressPage()
+            {
+                ConvertedRecipe = controller.ConvertedRecipe,
+                CommandRecipe = controller.CommandRecipe
+            });
+
+            //await Navigation.PopAsync();
         }
 
         async private void SaveRecipeButton_Clicked(object sender, EventArgs e)

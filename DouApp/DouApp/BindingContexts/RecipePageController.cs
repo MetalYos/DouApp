@@ -30,11 +30,6 @@ namespace DouApp.BindingContexts
 
     public class RecipePageController
     {
-        // User recipe that will be used to check amounts against containers
-        UserRecipe convertedRecipe;
-        // User recipe that will be used to build command string
-        UserRecipe commandRecipe;
-
         #region Properties
         // Is the recipe new or one from history
         public bool IsNew { get; set; }
@@ -42,6 +37,12 @@ namespace DouApp.BindingContexts
         public List<Container> Containers { get; set; }
         public UserRecipe Recipe { get; set; }
         public List<RecipeIngredientsList> Ingredients { get; set; }
+
+        // User recipe that will be used to check amounts against containers
+        public UserRecipe ConvertedRecipe { get; set; }
+
+        // User recipe that will be used to build command string
+        public UserRecipe CommandRecipe { get; set; }
         #endregion
 
         public RecipePageController(UserRecipe recipe, bool isNew = false, bool isPossible = true)
@@ -303,85 +304,84 @@ namespace DouApp.BindingContexts
         // Each container which needs filling is added to the returned list
         public List<IngredientAmountToFill> CheckIfPossible()
         {
-            CreateConvertedRecipe();
             List<IngredientAmountToFill> ingredients = new List<IngredientAmountToFill>();
 
-            decimal diff = Containers[0].Amount - convertedRecipe.Amount1;
+            decimal diff = Containers[0].Amount - ConvertedRecipe.Amount1;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient1,
+                    ProductName = ConvertedRecipe.Ingredient1,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[1].Amount - convertedRecipe.Amount2;
+            diff = Containers[1].Amount - ConvertedRecipe.Amount2;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient2,
+                    ProductName = ConvertedRecipe.Ingredient2,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[2].Amount - convertedRecipe.Amount3;
+            diff = Containers[2].Amount - ConvertedRecipe.Amount3;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient3,
+                    ProductName = ConvertedRecipe.Ingredient3,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[3].Amount - convertedRecipe.Amount4;
+            diff = Containers[3].Amount - ConvertedRecipe.Amount4;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient4,
+                    ProductName = ConvertedRecipe.Ingredient4,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[4].Amount - convertedRecipe.Amount5;
+            diff = Containers[4].Amount - ConvertedRecipe.Amount5;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient5,
+                    ProductName = ConvertedRecipe.Ingredient5,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[5].Amount - convertedRecipe.Amount6;
+            diff = Containers[5].Amount - ConvertedRecipe.Amount6;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient6,
+                    ProductName = ConvertedRecipe.Ingredient6,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[6].Amount - convertedRecipe.Amount7;
+            diff = Containers[6].Amount - ConvertedRecipe.Amount7;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient7,
+                    ProductName = ConvertedRecipe.Ingredient7,
                     AmountToFill = -diff
                 });
             }
 
-            diff = Containers[7].Amount - convertedRecipe.Amount8;
+            diff = Containers[7].Amount - ConvertedRecipe.Amount8;
             if (diff < 0)
             {
                 ingredients.Add(new IngredientAmountToFill()
                 {
-                    ProductName = convertedRecipe.Ingredient8,
+                    ProductName = ConvertedRecipe.Ingredient8,
                     AmountToFill = -diff
                 });
             }
@@ -391,6 +391,7 @@ namespace DouApp.BindingContexts
 
         // Assumes that it is possible to perform the action
         // (checking if it is possible id done before calling the method)
+        /*
         public async Task<bool> LetsDoh(ContentPage page)
         {
             // Create the command recipe from which the command string is created
@@ -467,6 +468,7 @@ namespace DouApp.BindingContexts
                 }
             }
         }
+        */
 
         public void SaveRecipe()
         {
@@ -484,118 +486,119 @@ namespace DouApp.BindingContexts
         // Creates a recipe that will be used to update the containers
         // meaning that the amounts of all dry ingredients are in grams
         // and the liquid ingredients are in ml
-        private void CreateConvertedRecipe()
+        public void CreateConvertedRecipe()
         {
-            convertedRecipe = new UserRecipe();
-            convertedRecipe.UserID = Recipe.UserID;
-            convertedRecipe.LastUse = Recipe.LastUse;
+            ConvertedRecipe = new UserRecipe();
+            ConvertedRecipe.UserID = Recipe.UserID;
+            ConvertedRecipe.LastUse = Recipe.LastUse;
 
-            convertedRecipe.Ingredient1 = Recipe.Ingredient1;
-            convertedRecipe.Amount1 = Recipe.Amount1;
+            ConvertedRecipe.Ingredient1 = Recipe.Ingredient1;
+            ConvertedRecipe.Amount1 = Recipe.Amount1;
             if (Recipe.Type1 != "gr")
-                convertedRecipe.Amount1 = App.Ingredients.ConvertToGr(Recipe.Ingredient1, Recipe.Amount1, Recipe.Type1);
-            convertedRecipe.Type1 = "gr";
+                ConvertedRecipe.Amount1 = App.Ingredients.ConvertToGr(Recipe.Ingredient1, Recipe.Amount1, Recipe.Type1);
+            ConvertedRecipe.Type1 = "gr";
 
-            convertedRecipe.Ingredient2 = Recipe.Ingredient2;
-            convertedRecipe.Amount2 = Recipe.Amount2;
+            ConvertedRecipe.Ingredient2 = Recipe.Ingredient2;
+            ConvertedRecipe.Amount2 = Recipe.Amount2;
             if (Recipe.Type2 != "gr")
-                convertedRecipe.Amount2 = App.Ingredients.ConvertToGr(Recipe.Ingredient2, Recipe.Amount2, Recipe.Type2);
-            convertedRecipe.Type2 = "gr";
+                ConvertedRecipe.Amount2 = App.Ingredients.ConvertToGr(Recipe.Ingredient2, Recipe.Amount2, Recipe.Type2);
+            ConvertedRecipe.Type2 = "gr";
 
-            convertedRecipe.Ingredient3 = Recipe.Ingredient3;
-            convertedRecipe.Amount3 = Recipe.Amount3;
+            ConvertedRecipe.Ingredient3 = Recipe.Ingredient3;
+            ConvertedRecipe.Amount3 = Recipe.Amount3;
             if (Recipe.Type3 != "gr")
-                convertedRecipe.Amount3 = App.Ingredients.ConvertToGr(Recipe.Ingredient3, Recipe.Amount3, Recipe.Type3);
-            convertedRecipe.Type3 = "gr";
+                ConvertedRecipe.Amount3 = App.Ingredients.ConvertToGr(Recipe.Ingredient3, Recipe.Amount3, Recipe.Type3);
+            ConvertedRecipe.Type3 = "gr";
 
-            convertedRecipe.Ingredient4 = Recipe.Ingredient4;
-            convertedRecipe.Amount4 = Recipe.Amount4;
+            ConvertedRecipe.Ingredient4 = Recipe.Ingredient4;
+            ConvertedRecipe.Amount4 = Recipe.Amount4;
             if (Recipe.Type4 != "gr")
-                convertedRecipe.Amount4 = App.Ingredients.ConvertToGr(Recipe.Ingredient4, Recipe.Amount4, Recipe.Type4);
-            convertedRecipe.Type4 = "gr";
+                ConvertedRecipe.Amount4 = App.Ingredients.ConvertToGr(Recipe.Ingredient4, Recipe.Amount4, Recipe.Type4);
+            ConvertedRecipe.Type4 = "gr";
 
-            convertedRecipe.Ingredient5 = Recipe.Ingredient5;
-            convertedRecipe.Amount5 = Recipe.Amount5;
+            ConvertedRecipe.Ingredient5 = Recipe.Ingredient5;
+            ConvertedRecipe.Amount5 = Recipe.Amount5;
             if (Recipe.Type5 != "gr")
-                convertedRecipe.Amount5 = App.Ingredients.ConvertToGr(Recipe.Ingredient5, Recipe.Amount5, Recipe.Type5);
-            convertedRecipe.Type5 = "gr";
+                ConvertedRecipe.Amount5 = App.Ingredients.ConvertToGr(Recipe.Ingredient5, Recipe.Amount5, Recipe.Type5);
+            ConvertedRecipe.Type5 = "gr";
 
-            convertedRecipe.Ingredient6 = Recipe.Ingredient6;
-            convertedRecipe.Amount6 = Recipe.Amount6;
+            ConvertedRecipe.Ingredient6 = Recipe.Ingredient6;
+            ConvertedRecipe.Amount6 = Recipe.Amount6;
             if (Recipe.Type6 != "gr")
-                convertedRecipe.Amount6 = App.Ingredients.ConvertToGr(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
-            convertedRecipe.Type6 = "gr";
+                ConvertedRecipe.Amount6 = App.Ingredients.ConvertToGr(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
+            ConvertedRecipe.Type6 = "gr";
 
-            convertedRecipe.Ingredient7 = Recipe.Ingredient7;
-            convertedRecipe.Amount7 = App.Ingredients.ConvertToMl(Recipe.Ingredient7, Recipe.Amount7);
+            ConvertedRecipe.Ingredient7 = Recipe.Ingredient7;
+            ConvertedRecipe.Amount7 = App.Ingredients.ConvertToMl(Recipe.Ingredient7, Recipe.Amount7);
 
-            convertedRecipe.Ingredient8 = Recipe.Ingredient8;
-            convertedRecipe.Amount8 = App.Ingredients.ConvertToMl(Recipe.Ingredient8, Recipe.Amount8);
+            ConvertedRecipe.Ingredient8 = Recipe.Ingredient8;
+            ConvertedRecipe.Amount8 = App.Ingredients.ConvertToMl(Recipe.Ingredient8, Recipe.Amount8);
         }
 
         // Creates a recipe that will be used to create the command to send to the machine
         // meaning that the amounts of the first 3 ingredients are in grams,
         // and the amount of the last 3 ingredients are in tsp
-        private void CreateCommandRecipe()
+        public void CreateCommandRecipe()
         {
-            if (convertedRecipe == null)
+            if (ConvertedRecipe == null)
                 CreateConvertedRecipe();
 
-            commandRecipe = new UserRecipe();
-            commandRecipe.UserID = Recipe.UserID;
-            commandRecipe.LastUse = Recipe.LastUse;
+            CommandRecipe = new UserRecipe();
+            CommandRecipe.UserID = Recipe.UserID;
+            CommandRecipe.LastUse = Recipe.LastUse;
 
-            commandRecipe.Ingredient1 = Recipe.Ingredient1;
-            commandRecipe.Amount1 = convertedRecipe.Amount1;
-            commandRecipe.Type1 = "gr";
+            CommandRecipe.Ingredient1 = Recipe.Ingredient1;
+            CommandRecipe.Amount1 = ConvertedRecipe.Amount1;
+            CommandRecipe.Type1 = "gr";
 
-            commandRecipe.Ingredient2 = Recipe.Ingredient2;
-            commandRecipe.Amount2 = convertedRecipe.Amount2;
-            commandRecipe.Type2 = "gr";
+            CommandRecipe.Ingredient2 = Recipe.Ingredient2;
+            CommandRecipe.Amount2 = ConvertedRecipe.Amount2;
+            CommandRecipe.Type2 = "gr";
 
-            commandRecipe.Ingredient3 = Recipe.Ingredient3;
-            commandRecipe.Amount3 = convertedRecipe.Amount3;
-            commandRecipe.Type3 = "gr";
+            CommandRecipe.Ingredient3 = Recipe.Ingredient3;
+            CommandRecipe.Amount3 = ConvertedRecipe.Amount3;
+            CommandRecipe.Type3 = "gr";
 
-            commandRecipe.Ingredient4 = Recipe.Ingredient4;
-            commandRecipe.Amount4 = Recipe.Amount4;
+            CommandRecipe.Ingredient4 = Recipe.Ingredient4;
+            CommandRecipe.Amount4 = Recipe.Amount4;
             if (Recipe.Type4 != "tsp")
-                commandRecipe.Amount4 = App.Ingredients.ConvertToTsp(Recipe.Ingredient4, Recipe.Amount4, Recipe.Type4);
-            commandRecipe.Type4 = "tsp";
+                CommandRecipe.Amount4 = App.Ingredients.ConvertToTsp(Recipe.Ingredient4, Recipe.Amount4, Recipe.Type4);
+            CommandRecipe.Type4 = "tsp";
 
-            commandRecipe.Ingredient5 = Recipe.Ingredient5;
-            commandRecipe.Amount5 = Recipe.Amount5;
+            CommandRecipe.Ingredient5 = Recipe.Ingredient5;
+            CommandRecipe.Amount5 = Recipe.Amount5;
             if (Recipe.Type5 != "tsp")
-                commandRecipe.Amount5 = App.Ingredients.ConvertToTsp(Recipe.Ingredient5, Recipe.Amount5, Recipe.Type5);
-            commandRecipe.Type5 = "tsp";
+                CommandRecipe.Amount5 = App.Ingredients.ConvertToTsp(Recipe.Ingredient5, Recipe.Amount5, Recipe.Type5);
+            CommandRecipe.Type5 = "tsp";
 
-            commandRecipe.Ingredient6 = Recipe.Ingredient6;
-            commandRecipe.Amount6 = Recipe.Amount6;
+            CommandRecipe.Ingredient6 = Recipe.Ingredient6;
+            CommandRecipe.Amount6 = Recipe.Amount6;
             if (Recipe.Type6 != "tsp")
-                commandRecipe.Amount6 = App.Ingredients.ConvertToTsp(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
-            commandRecipe.Type6 = "tsp";
+                CommandRecipe.Amount6 = App.Ingredients.ConvertToTsp(Recipe.Ingredient6, Recipe.Amount6, Recipe.Type6);
+            CommandRecipe.Type6 = "tsp";
 
-            commandRecipe.Ingredient7 = Recipe.Ingredient7;
-            commandRecipe.Amount7 = Recipe.Amount7;
+            CommandRecipe.Ingredient7 = Recipe.Ingredient7;
+            CommandRecipe.Amount7 = Recipe.Amount7;
 
-            commandRecipe.Ingredient8 = Recipe.Ingredient8;
-            commandRecipe.Amount8 = Recipe.Amount8;
+            CommandRecipe.Ingredient8 = Recipe.Ingredient8;
+            CommandRecipe.Amount8 = Recipe.Amount8;
         }
 
+        /*
         private string CreateCommandString()
         {
             string command = "";
 
             // Division by 0.25 is done to containers that release 0.25 cup/spoon each time
             // order of containers on the machine is 4 -> 1 -> 5 -> 2 -> 6 -> 7 -> 8
-            command += "f4$" + ((int)(commandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f1$" + ((int)(commandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + ((int)(commandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f2$" + ((int)(commandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + ((int)(commandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f7$" + ((int)(commandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f8$" + ((int)(commandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            //command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
+            command += "f4$" + ((int)(CommandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f1$" + ((int)(CommandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
+            command += "f5$" + ((int)(CommandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f2$" + ((int)(CommandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
+            command += "f6$" + ((int)(CommandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f7$" + ((int)(CommandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            command += "f8$" + ((int)(CommandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
+            //command += "f3$" + ((int)(CommandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
@@ -605,15 +608,15 @@ namespace DouApp.BindingContexts
         {
             if (!notLarge)
             {
-                App.Containers.RemoveFromContainer(1, convertedRecipe.Amount1);
-                App.Containers.RemoveFromContainer(2, convertedRecipe.Amount2);
-                App.Containers.RemoveFromContainer(3, convertedRecipe.Amount3);
+                App.Containers.RemoveFromContainer(1, ConvertedRecipe.Amount1);
+                App.Containers.RemoveFromContainer(2, ConvertedRecipe.Amount2);
+                App.Containers.RemoveFromContainer(3, ConvertedRecipe.Amount3);
             }
-            App.Containers.RemoveFromContainer(4, convertedRecipe.Amount4);
-            App.Containers.RemoveFromContainer(5, convertedRecipe.Amount5);
-            App.Containers.RemoveFromContainer(6, convertedRecipe.Amount6);
-            App.Containers.RemoveFromContainer(7, convertedRecipe.Amount7);
-            App.Containers.RemoveFromContainer(8, convertedRecipe.Amount8);
+            App.Containers.RemoveFromContainer(4, ConvertedRecipe.Amount4);
+            App.Containers.RemoveFromContainer(5, ConvertedRecipe.Amount5);
+            App.Containers.RemoveFromContainer(6, ConvertedRecipe.Amount6);
+            App.Containers.RemoveFromContainer(7, ConvertedRecipe.Amount7);
+            App.Containers.RemoveFromContainer(8, ConvertedRecipe.Amount8);
 
             App.Containers.SaveContainers();
         }
@@ -632,5 +635,6 @@ namespace DouApp.BindingContexts
             App.Containers.RemoveFromContainer(container, weight);
             App.Containers.SaveContainers();
         }
+        */
     }
 }
