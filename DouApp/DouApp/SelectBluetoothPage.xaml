@@ -27,6 +27,16 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+                <!-- Cancel Button -->
+                <Button x:Name="cancelButton"
+                        Text="Cancel"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        Clicked="CancelButton_Clicked"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

@@ -15,6 +15,8 @@ namespace DouApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class SelectBluetoothPage : ContentPage
     {
+        public bool FirstTime { get; set; }
+
         public SelectBluetoothPage()
         {
             InitializeComponent();
@@ -59,7 +61,26 @@ namespace DouApp
                 }
             }
 
-            await Navigation.PopAsync();
+            await GoToPage();
+        }
+
+        private async void CancelButton_Clicked(object sender, EventArgs e)
+        {
+            await GoToPage();
+        }
+
+        private async Task GoToPage()
+        {
+            if (!FirstTime)
+                await Navigation.PopAsync();
+            else
+            {
+                await Navigation.PushAsync(new ConfigurePage
+                {
+                    BindingContext = new ConfigurePageController(),
+                    FirstTime = true
+                });
+            }
         }
     }
 }

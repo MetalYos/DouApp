@@ -47,37 +47,7 @@ namespace DouApp.Droid
         private void SetDisabledColors(Android.Widget.EditText control, Android.Graphics.Color color)
         {
             control.SetTextColor(Element.IsEnabled ? Element.TextColor.ToAndroid() : color);
-            //Control.SetBackgroundColor(Element.IsEnabled ? Element.BackgroundColor.ToAndroid() : Android.Graphics.Color.DarkGray);
         }
-
-        /*
-        private void DrawBorder(Android.Widget.EditText control, MyEntry entry)
-        {
-            var nativeEditText = (Android.Widget.EditText)Control;
-
-            ShapeDrawable shape = null;
-            if (entry.BorderRadius > 0)
-            {
-                float[] outerRadii = new float[] 
-                {
-                    entry.BorderRadius, entry.BorderRadius,
-                    entry.BorderRadius, entry.BorderRadius,
-                    entry.BorderRadius, entry.BorderRadius,
-                    entry.BorderRadius, entry.BorderRadius
-                };
-
-                shape = new ShapeDrawable(new Android.Graphics.Drawables.Shapes.RoundRectShape(outerRadii, null, null));
-            }
-            else
-            {
-                shape = new ShapeDrawable(new Android.Graphics.Drawables.Shapes.RectShape());
-            }
-            shape.Paint.Color = entry.BorderColor.ToAndroid();
-            shape.Paint.SetStyle(Paint.Style.Stroke);
-            shape.Paint.StrokeWidth = entry.BorderWidth;
-            nativeEditText.Background = shape;
-        }
-        */
     }
 
     public class MyPickerRenderer : PickerRenderer

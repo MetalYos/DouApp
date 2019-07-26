@@ -22,7 +22,7 @@ namespace DouApp.Databases
             LoadContainers();
         }
 
-        private void LoadContainers()
+        public void LoadContainers()
         {
             ContainersToDatabase containersToDB = new ContainersToDatabase();
             containersToDB.UserID = App.UserID;

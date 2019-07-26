@@ -46,6 +46,16 @@
                     WidthRequest="280"
                     HorizontalOptions="Center"
                     Clicked="NewRecipeButton_Clicked" />
+                <!-- Logout button -->
+                <Button x:Name="logoutButton"
+                    Text="Logout"
+                    BorderWidth="2"
+                    BorderRadius="10"
+                    BackgroundColor="#169F9B"
+                    TextColor="White"
+                    WidthRequest="280"
+                    HorizontalOptions="Center"
+                    Clicked="LogoutButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage>

@@ -141,8 +141,22 @@ namespace DouApp
         {
             await Navigation.PushAsync(new SelectBluetoothPage
             {
-                BindingContext = new SelectBluetoothPageController()
+                BindingContext = new SelectBluetoothPageController(),
+                FirstTime = false
             });
+        }
+
+        private async void LogoutButton_Clicked(object sender, EventArgs e)
+        {
+            bool logout = await DisplayAlert("Logout", "Are you sure you want to logout?", "yes", "no");
+
+            if (logout)
+            {
+                App.Current.MainPage = new NavigationPage(new LoginPage())
+                {
+                    BarBackgroundColor = Color.FromHex("#002060")
+                };
+            }
         }
     }
 }

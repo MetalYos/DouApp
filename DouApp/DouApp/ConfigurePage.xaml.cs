@@ -33,14 +33,14 @@ namespace DouApp
             // update containers with ingredients
             (BindingContext as ConfigurePageController).UpdateContainers();
 
-            // Create a new main page
-            var tabbedPage = new TabbedMainPage()
-            {
-                BarBackgroundColor = Color.FromHex("#002060")
-            };
-
             if (FirstTime)
             {
+                // Create a new main page
+                var tabbedPage = new TabbedMainPage()
+                {
+                    BarBackgroundColor = Color.FromHex("#002060")
+                };
+
                 App.Current.MainPage = new NavigationPage(tabbedPage)
                 {
                     BarBackgroundColor = Color.FromHex("#002060")

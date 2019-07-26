@@ -12,7 +12,7 @@ namespace DouApp.BindingContexts
     public class SelectBluetoothPageController
     {
         public List<MyBluetoothDevice> BluetoothDevices { get; set; }
-        
+
         public SelectBluetoothPageController()
         {
             try

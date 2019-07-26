@@ -454,29 +454,13 @@ namespace DouApp.BindingContexts
             CreateCommandRecipe();
 
             // Check if there is a bowl on the machine
-            // Read string from bluetooth (with a 5 seconds time limit)
-            /*
-            string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(5);
+            // Read string from bluetooth (with a 10 seconds time limit)
+            string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(10);
             if (received.Contains("bowl"))
             {
                 await page.DisplayAlert("Error!", "Please put the Bowl on the machine first.", "Ok");
                 return false;
             }
-            */
-
-            /*
-            // Create command string and send it via bluetooth
-            string command = CreateCommandString();
-
-            // Send command via bluetooth
-            if (DependencyService.Get<IBluetoothHelper>().IsConnected())
-                DependencyService.Get<IBluetoothHelper>().WriteStringToDevice(command);
-            else
-            {
-                await page.DisplayAlert("Error!", "Bluetooth device is not connected! Going back to recipe page", "Ok");
-                return false;
-            }
-            */
 
             // Return true
             return true;

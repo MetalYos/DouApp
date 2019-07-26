@@ -20,9 +20,8 @@ namespace DouApp
             InitializeComponent();
         }
 
-        private void RegisterButton_Clicked(object sender, EventArgs e)
+        private async void RegisterButton_Clicked(object sender, EventArgs e)
         {
-            // For now (no need to add a new user to the database each time)
             string username = usernameEntry.Text;
             string email = emailEntry.Text;
             string password = passwordEntry.Text;
@@ -31,21 +30,21 @@ namespace DouApp
             if (username == string.Empty)
             {
                 // Username not entered alert
-                DisplayAlert("Username error", "Username must be entered", "OK");
+                await DisplayAlert("Username error", "Username must be entered", "OK");
                 return;
             }
 
             if (password == string.Empty)
             {
                 // Password not entered alert
-                DisplayAlert("Password error", "Password must be entered", "OK");
+                await DisplayAlert("Password error", "Password must be entered", "OK");
                 return;
             }
 
             if (password != rePassword)
             {
                 // Password and re-entered password do not match alert
-                DisplayAlert("Password error", "Re-entered password does not match the entered password", "OK");
+                await DisplayAlert("Password error", "Re-entered password does not match the entered password", "OK");
                 return;
             }
 
@@ -61,16 +60,24 @@ namespace DouApp
             if (id == 0)
             {
                 // Username and/or email already exist alert
-                DisplayAlert("Register error", "Username and/or Email already exist", "OK");
+                await DisplayAlert("Register error", "Username and/or Email already exist", "OK");
                 return;
             }
 
             App.UserID = id;
-            Navigation.PushAsync(new ConfigurePage
+
+            // Create new SelectBluetooth Page
+            var page = new SelectBluetoothPage()
             {
-                BindingContext = new ConfigurePageController(),
+                BindingContext = new SelectBluetoothPageController(),
                 FirstTime = true
-            });
+            };
+
+            // Create new Navigation Page
+            App.Current.MainPage = new NavigationPage(page)
+            {
+                BarBackgroundColor = Color.FromHex("#002060")
+            };
         }
     }
 }

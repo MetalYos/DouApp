@@ -44,7 +44,11 @@ namespace DouApp
                 return;
             }
 
+            // Set user id
             App.UserID = id;
+
+            // Load Containers
+            App.Containers.LoadContainers();
 
             // Connect to Bluetooth
             string deviceName = App.Current.Properties["DeviceName"].ToString();
@@ -63,7 +67,7 @@ namespace DouApp
                     tryAgain = false;
             }
 
-            //App.UserID = 5;
+            // Move to main page
             var tabbedPage = new TabbedMainPage()
             {
                 BarBackgroundColor = Color.FromHex("#002060")
