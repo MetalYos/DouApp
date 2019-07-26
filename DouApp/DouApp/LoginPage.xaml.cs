@@ -47,12 +47,13 @@ namespace DouApp
             App.UserID = id;
 
             // Connect to Bluetooth
+            string deviceName = App.Current.Properties["DeviceName"].ToString();
             bool tryAgain = true;
             while (tryAgain)
             {
-                if (!await ConnectToBluetoothDevice(App.DeviceName, 30))
+                if (!await ConnectToBluetoothDevice(deviceName, 30))
                 {
-                    string answer = await DisplayActionSheet("Couldn't connect to " + App.DeviceName + "! Try again?",
+                    string answer = await DisplayActionSheet("Couldn't connect to " + deviceName + "! Try again?",
                         "Cancel", null, "Yes", "No");
                     if (answer == "Yes") tryAgain = true;
                     else if (answer == "No") tryAgain = false;

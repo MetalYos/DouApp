@@ -135,6 +135,9 @@ namespace DouApp.Droid
             int bytes; // bytes returned from read()
             string message = "";
 
+            if (!_socket.InputStream.CanRead)
+                return message;
+
             try
             {
                 DataInputStream mmInStream = new DataInputStream(_socket.InputStream);
@@ -144,7 +147,11 @@ namespace DouApp.Droid
                 TimeSpan maxTime = new TimeSpan(0, 0, maxSeconds);
                 while (!message.Contains('\n'))
                 {
+                    // Delay for 0.1 seconds
+                    Thread.Sleep(100);
+
                     // Read from input string
+                    buffer = new byte[1024];
                     bytes = await mmInStream.ReadAsync(buffer);
                     message += Encoding.ASCII.GetString(buffer, 0, bytes);
                     if (stopWatch.Elapsed == maxTime)
@@ -153,9 +160,6 @@ namespace DouApp.Droid
                         stopWatch.Stop();
                         break;
                     }
-
-                    // Delay for 0.25 seconds (no need to read each cycle)
-                    Thread.Sleep(250);
                 }
                 stopWatch.Stop();
             }
@@ -165,6 +169,11 @@ namespace DouApp.Droid
             }
 
             return message;
+        }
+
+        public void Disconnect()
+        {
+            _socket.Close();
         }
     }
 }

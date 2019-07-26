@@ -42,53 +42,30 @@ namespace DouApp
                 return;
             }
 
-            // TODO: check if the ingredients are in the containers
-
-            // Check if it is possible to make the dough, if not show an error message and return
-            controller.CreateConvertedRecipe();
-            var ingredientsToFill = controller.CheckIfPossible();
-            if (ingredientsToFill.Count > 0)
-            {
-                string message = "";
-                foreach (var ingredient in ingredientsToFill)
-                {
-                    message += "Not enough content in " + ingredient.ProductName + " container to make doh!\n"
-                            + "Please fill in " + (ingredient.AmountToFill).ToString() + " grams.\n";
-                }
-                await DisplayAlert("Error!", message, "Ok");
-                await Navigation.PopAsync();
-                return;
-            }
-
-            // Save the recipe
-            controller.SaveRecipe();
-
-            // Create the command recipe in order to pass it to the Progress Page
-            controller.CreateCommandRecipe();
-
-            //await controller.LetsDoh(this);
+            bool canContinue = await controller.LetsDoh(this);
 
             // Move on to the Progress Page
-            await Navigation.PushAsync(new ProgressPage()
+            if (canContinue)
             {
-                ConvertedRecipe = controller.ConvertedRecipe,
-                CommandRecipe = controller.CommandRecipe
-            });
-
-            //await Navigation.PopAsync();
+                await Navigation.PushAsync(new ProgressPage()
+                {
+                    ConvertedRecipe = controller.ConvertedRecipe,
+                    CommandRecipe = controller.CommandRecipe
+                });
+            }
         }
 
         async private void SaveRecipeButton_Clicked(object sender, EventArgs e)
         {
+            var controller = BindingContext as RecipePageController;
+            if (controller == null)
+                return;
+
             if (recipeNameEntry.Text == string.Empty)
             {
                 await DisplayAlert("Error!", "Please enter a name before saving!", "Ok");
                 return;
             }
-
-            var controller = BindingContext as RecipePageController;
-            if (controller == null)
-                return;
 
             controller.SaveRecipe();
 

@@ -24,13 +24,15 @@ namespace DouApp
             InitializeComponent();
         }
 
-        public async void LetsDoh(ContentPage page)
+        protected override void OnAppearing()
         {
-            // The amount the progress bar advances each time
-            // (It should b 1/ 8 but Container3 is missing from the machine).
-            double progressChunk = 1.0 / 7.0;
-            uint progressTime = 250;
+            base.OnAppearing();
 
+            LetsDoh();
+        }
+
+        public async void LetsDoh()
+        {
             // Create command string and send it via bluetooth
             string command = CreateCommandString();
 
@@ -39,86 +41,91 @@ namespace DouApp
                 DependencyService.Get<IBluetoothHelper>().WriteStringToDevice(command);
             else
             {
-                await page.DisplayAlert("Error!", "Bluetooth device is not connected! Going back to recipe page", "Ok");
+                await DisplayAlert("Error!", "Bluetooth device is not connected! Going back to recipe page", "Ok");
                 await Navigation.PopAsync();
             }
+
+            // The amount the progress bar advances each time
+            // (It should b 1/ 8 but Container3 is missing from the machine).
+            double progressChunk = 1.0 / 7.0;
+            uint progressTime = 250;
+
+            bool sentNo = false;
 
             // This loop will run untill the command is finished, bowl is removed or user sends stop
             while (true)
             {
-                // Read string from bluetooth (with a 60 seconds time limit)
-                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(60);
+                // Read string from bluetooth
+                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice();
+                testLabel.Text = received;
 
                 // Check recieved commands
-                if (received.Contains("bowl"))
+                if (received.Contains("bowl") && !sentNo)
                 {
                     // Show Yes/No message.
-                    bool toContinue = await page.DisplayAlert("Continue?", "Bowl was removed from scale! Please place it on the scale and press Yes to continue, or press No to stop.", "Yes", "No");
+                    bool toContinue = await DisplayAlert("Continue?", "Bowl was removed from scale! Please place it on the scale and press Yes to continue, or press No to stop.", "Yes", "No");
                     if (toContinue)
                     {
                         // If user chooses yes, send 'y' through bluetooth and continue
                         DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("y");
-                        // Wait 10 seconds
-                        Thread.Sleep(10000);
                     }
                     else
                     {
                         // else, send 'n' through bluettoth and return false
                         DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("n");
-                        // Wait 10 seconds
-                        Thread.Sleep(10000);
+                        sentNo = true;
                     }
                 }
-                else if (received.StartsWith("1"))
+                else if (received.Contains("1$"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateLargeContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("2"))
+                else if (received.Contains("2$"))
+                {
+                    // Remove given amount from the appropriate container
+                    UpdateLargeContainer(received);
+                    
+                    await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
+                }
+                else if (received.Contains("3;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateLargeContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("3"))
-                {
-                    // Remove given amount from the appropriate container
-                    UpdateLargeContainer(received);
-
-                    await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
-                }
-                else if (received.StartsWith("4"))
+                else if (received.Contains("4;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateSmallOrLiquidContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("5"))
+                else if (received.Contains("5;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateSmallOrLiquidContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("6"))
+                else if (received.Contains("6;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateSmallOrLiquidContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("7"))
+                else if (received.Contains("7;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateSmallOrLiquidContainer(received);
 
                     await UpdateProgressBar(progressChunk, progressTime, Easing.Linear);
                 }
-                else if (received.StartsWith("8"))
+                else if (received.Contains("8;"))
                 {
                     // Remove given amount from the appropriate container
                     UpdateSmallOrLiquidContainer(received);
@@ -131,7 +138,7 @@ namespace DouApp
                     App.Containers.SaveContainers();
 
                     // Show a message and return to recipe page
-                    await page.DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious baked goods", "Ok");
+                    await DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious baked goods", "Ok");
                     await Navigation.PopAsync();
                 }
                 else if (received.Contains("stop"))
@@ -140,7 +147,7 @@ namespace DouApp
                     App.Containers.SaveContainers();
                     
                     // Show a message and return to recipe page
-                    await page.DisplayAlert("Stopped!", "Dough making wasn't completed! Going back to recipe page", "Ok");
+                    await DisplayAlert("Stopped!", "Dough making wasn't completed! Going back to recipe page", "Ok");
                     await Navigation.PopAsync();
                 }
                 else
@@ -149,6 +156,71 @@ namespace DouApp
                     continue;
                 }
             }
+        }
+
+        private void UpdateLargeContainer(string received)
+        {
+            int container = 1;
+            int startIndex = 2;
+            if (received[0] == '!')
+            {
+                container = int.Parse(received.Substring(1, 1));
+                startIndex = 3;
+            }
+            else
+            {
+                container = int.Parse(received.Substring(0, 1));
+                startIndex = 2;
+            }
+
+            int i = startIndex;
+            while (received[i] != ';')
+                i++;
+            int length = (i - 1) - startIndex + 1;
+
+            decimal weight = 0;
+            try
+            {
+                weight = decimal.Parse(received.Substring(startIndex, length));
+            }
+            catch
+            {
+                if (container == 1)
+                    weight = ConvertedRecipe.Amount1;
+                else if (container == 2)
+                    weight = ConvertedRecipe.Amount2;
+                else
+                    weight = ConvertedRecipe.Amount3;
+            }
+
+            App.Containers.RemoveFromContainer(container, weight);
+        }
+
+        private void UpdateSmallOrLiquidContainer(string received)
+        {
+            int container = 4;
+            if (received[0] == '!')
+                container = int.Parse(received.Substring(1, 1));
+            else
+                container = int.Parse(received.Substring(0, 1));
+
+            if (container == 4)
+                App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount4);
+            else if (container == 5)
+                App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount5);
+            else if (container == 6)
+                App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount6);
+            else if (container == 7)
+                App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount7);
+            else
+                App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount8);
+        }
+
+        private async Task<bool> UpdateProgressBar(double progressChunk, uint time, Easing easing)
+        {
+            double currentProgress = progressBar.Progress;
+            bool result = await progressBar.ProgressTo(currentProgress + progressChunk, time, easing);
+            return result;
         }
 
         private string CreateCommandString()
@@ -168,33 +240,6 @@ namespace DouApp
             command += "b;^";
 
             return command;
-        }
-
-        private void UpdateLargeContainer(string received)
-        {
-            int container = int.Parse(received.Substring(0, 1));
-
-            int startIndex = 2;
-            int i = startIndex;
-            while (received[i] != ';')
-                i++;
-            int length = (i - 1) - startIndex + 1;
-
-            decimal weight = decimal.Parse(received.Substring(startIndex, length));
-            App.Containers.RemoveFromContainer(container, weight);
-        }
-
-        private void UpdateSmallOrLiquidContainer(string received)
-        {
-            int container = int.Parse(received.Substring(0, 1));
-            App.Containers.RemoveFromContainer(container, ConvertedRecipe.Amount4);
-        }
-
-        private async Task<bool> UpdateProgressBar(double progressChunk, uint time, Easing easing)
-        {
-            double currentProgress = progressBar.Progress;
-            bool result = await progressBar.ProgressTo(currentProgress + progressChunk, time, easing);
-            return result;
         }
     }
 }

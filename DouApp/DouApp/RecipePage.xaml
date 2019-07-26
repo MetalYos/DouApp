@@ -12,11 +12,6 @@
             <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
             <StackLayout BackgroundColor="#002670"
                          Padding="20,20,20,20">
-                <Label Text="Recipe is not possible with original ingredients! Select new ingredients from containers and save Recipe, or go back to main screen."
-                       HorizontalOptions="StartAndExpand"
-                       VerticalOptions="CenterAndExpand"
-                       TextColor="White"
-                       IsVisible="{Binding IsPossible, Converter={StaticResource boolInverter}}" />
                 <local:MyEntry x:Name="recipeNameEntry"
                                Placeholder="Name"
                                Text="{Binding Recipe.RecipeName}"
@@ -31,7 +26,7 @@
                        VerticalOptions="Center"
                        FontSize="Medium"
                        TextColor="White" />
-                <!-- Containers -->
+                <!-- Ingredients -->
                 <ListView x:Name="ingredientsListView">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -42,12 +37,22 @@
                                         <ColumnDefinition Width="3*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <Label x:Name="containerLabel"
-                                           Text="{Binding ProductName}"
-                                           VerticalOptions="CenterAndExpand" 
-                                           HorizontalOptions="StartAndExpand"
-                                           TextColor="White"
-                                           Grid.Column="0" />
+                                    <local:MyPicker x:Name="ingredientsPicker"
+                                                    ItemsSource="{Binding Ingredients}"
+                                                    SelectedItem="{Binding ProductName}"
+                                                    IsVisible="{Binding IsLiquid, Converter={StaticResource boolInverter}}"
+                                                    TextColor="White"
+                                                    LineColor="White"
+                                                    HorizontalOptions="StartAndExpand"
+                                                    FontSize="Small" />
+                                    <local:MyEntry Text="{Binding ProductName}"
+                                                   HorizontalOptions="StartAndExpand"
+                                                   TextColor="White"
+                                                   DisabledColor="White"
+                                                   LineColor="White"
+                                                   IsEnabled="False"
+                                                   IsVisible="{Binding IsLiquid}"
+                                                   FontSize="Small" />
                                     <local:MyEntry Text="{Binding Amount, StringFormat='{0:0.00}'}"
                                                    Placeholder="Amount"
                                                    TextColor="White"
@@ -102,7 +107,6 @@
                     TextColor="White"
                     WidthRequest="280"
                     HorizontalOptions="Center"
-                    IsVisible="{Binding IsPossible}"
                     Clicked="LetsDohRecipeButton_Clicked" />
                 <Button x:Name="saveRecipeButton"
                     Text="Save Recipe"

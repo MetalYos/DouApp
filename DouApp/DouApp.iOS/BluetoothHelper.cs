@@ -19,6 +19,11 @@ namespace DouApp.iOS
             throw new NotImplementedException();
         }
 
+        public void Disconnect()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<MyBluetoothDevice> GetPairedDevices()
         {
             throw new NotImplementedException();

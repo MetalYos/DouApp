@@ -165,6 +165,16 @@
                         HorizontalOptions="Center"
                         VerticalOptions="End"
                         Clicked="AddToContainersButton_Clicked" />
+                <Button x:Name="selectBlutoothButton" 
+                        Text="Select Bluetooth Device"
+                        BorderWidth="2"
+                        BorderRadius="10"
+                        BackgroundColor="#169F9B"
+                        TextColor="White"
+                        WidthRequest="280"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        Clicked="SelectBlutoothButton_Clicked" />
             </StackLayout>
         </StackLayout>
     </ContentPage>

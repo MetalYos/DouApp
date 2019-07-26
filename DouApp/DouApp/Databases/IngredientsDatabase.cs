@@ -77,6 +77,17 @@ namespace DouApp.Databases
 
             return ings;
         }
+
+        public List<string> GetIngredientsNamesByMeasuringType(string type)
+        {
+            List<string> ingsNames = new List<string>();
+            var ingredients = GetIngredientsByMeasuringType(type);
+
+            foreach (var ingredient in ingredients)
+                ingsNames.Add(ingredient.ProductName);
+
+            return ingsNames;
+        }
         
         public int GetIngredientIndex(string ingredientName)
         {

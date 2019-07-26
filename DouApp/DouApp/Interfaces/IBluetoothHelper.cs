@@ -11,6 +11,7 @@ namespace DouApp.Interfaces
         List<MyBluetoothDevice> GetPairedDevices();
         Task<bool> Connect(string name);
         void WriteStringToDevice(string message);
-        Task<string> ReadStringFromDevice(int maxSeconds);
+        Task<string> ReadStringFromDevice(int maxSeconds = 3600);
+        void Disconnect();
     }
 }

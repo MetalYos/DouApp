@@ -11,12 +11,23 @@
                      Padding="20,10,20,20">
             <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
             <StackLayout BackgroundColor="#002670"
-                         Padding="20,20,20,20">
+                         Padding="20,20,20,20"
+                         HorizontalOptions="FillAndExpand"
+                         VerticalOptions="FillAndExpand">
                 <Label Text="Preparing Dough!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+                       VerticalOptions="CenterAndExpand" 
+                       HorizontalOptions="CenterAndExpand"
+                       TextColor="White"
+                       FontSize="Large"/>
+                <Label x:Name="testLabel"
+                       Text=""
+                       VerticalOptions="CenterAndExpand" 
+                       HorizontalOptions="CenterAndExpand"
+                       TextColor="White"
+                       FontSize="Large"/>
                 <ProgressBar x:Name="progressBar"
-                             Progress="0" />
+                             Progress="0"
+                             ScaleY="5"/>
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>

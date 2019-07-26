@@ -22,10 +22,6 @@ namespace DouApp
         // User ID
         public static int UserID { get; set; }
 
-        // Bluetooth Device Name
-        public static string DeviceName { get; set;  }
-
-
         // Databases
         static MockData database = null;
         static UsersDatabase userDatabase = null;
@@ -98,7 +94,6 @@ namespace DouApp
             InitializeComponent();
 
             UserID = 0;
-            DeviceName = "Sharon";
 
             MainPage = new NavigationPage(new LoginPage())
             {
@@ -108,7 +103,9 @@ namespace DouApp
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            // Set DeviceName if it is not set
+            if (!Current.Properties.ContainsKey("DeviceName"))
+                Current.Properties["DeviceName"] = "Sharon";
 
             // Load ingredients conversion table at start up
             Ingredients.LoadTable();

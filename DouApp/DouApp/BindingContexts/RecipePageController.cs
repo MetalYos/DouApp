@@ -15,6 +15,7 @@ namespace DouApp.BindingContexts
     // Represents a recipe in the list view in the RecipePage
     public class RecipeIngredientsList
     {
+        public List<string> Ingredients { get; set; }
         public string ProductName { get; set; }
         public decimal Amount { get; set; }
         public int UnitsIndex { get; set; }
@@ -33,8 +34,9 @@ namespace DouApp.BindingContexts
         #region Properties
         // Is the recipe new or one from history
         public bool IsNew { get; set; }
-        public bool IsPossible { get; set; }
         public List<Container> Containers { get; set; }
+        public List<string> LargeIngredients { get; set; }
+        public List<string> SmallIngredients { get; set; }
         public UserRecipe Recipe { get; set; }
         public List<RecipeIngredientsList> Ingredients { get; set; }
 
@@ -45,12 +47,14 @@ namespace DouApp.BindingContexts
         public UserRecipe CommandRecipe { get; set; }
         #endregion
 
-        public RecipePageController(UserRecipe recipe, bool isNew = false, bool isPossible = true)
+        public RecipePageController(UserRecipe recipe, bool isNew = false)
         {
             Containers = App.Containers.GetContainers();
-            Recipe = UpdateRecipeOrderToContainers(recipe);
+            LargeIngredients = App.Ingredients.GetIngredientsNamesByMeasuringType("gr");
+            SmallIngredients = App.Ingredients.GetIngredientsNamesByMeasuringType("tsp");
+
+            Recipe = recipe;
             IsNew = isNew;
-            IsPossible = isPossible;
 
             // TODO: If it is a new Recipe, select the ingredients that are in the containers
             // otherwise show them as is (after updating the recipe to be as the containers).
@@ -155,66 +159,74 @@ namespace DouApp.BindingContexts
             Ingredients = new List<RecipeIngredientsList>();
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = LargeIngredients,
                 ProductName = Recipe.Ingredient1,
                 Amount = Recipe.Amount1,
                 UnitsIndex = GetUnitsIndex(Recipe.Type1),
-                IsLarge = Containers[0].IsLarge,
+                IsLarge = true,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = LargeIngredients,
                 ProductName = Recipe.Ingredient2,
                 Amount = Recipe.Amount2,
                 UnitsIndex = GetUnitsIndex(Recipe.Type2),
-                IsLarge = Containers[1].IsLarge,
+                IsLarge = true,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = LargeIngredients,
                 ProductName = Recipe.Ingredient3,
                 Amount = Recipe.Amount3,
                 UnitsIndex = GetUnitsIndex(Recipe.Type3),
-                IsLarge = Containers[2].IsLarge,
+                IsLarge = true,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = SmallIngredients,
                 ProductName = Recipe.Ingredient4,
                 Amount = Recipe.Amount4,
                 UnitsIndex = GetUnitsIndex(Recipe.Type4),
-                IsLarge = Containers[3].IsLarge,
+                IsLarge = false,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = SmallIngredients,
                 ProductName = Recipe.Ingredient5,
                 Amount = Recipe.Amount5,
                 UnitsIndex = GetUnitsIndex(Recipe.Type5),
-                IsLarge = Containers[4].IsLarge,
+                IsLarge = false,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = SmallIngredients,
                 ProductName = Recipe.Ingredient6,
                 Amount = Recipe.Amount6,
                 UnitsIndex = GetUnitsIndex(Recipe.Type6),
-                IsLarge = Containers[5].IsLarge,
+                IsLarge = false,
                 IsLiquid = false
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = null,
                 ProductName = Recipe.Ingredient7,
                 Amount = Recipe.Amount7,
                 UnitsIndex = 0,
-                IsLarge = true,
+                IsLarge = false,
                 IsLiquid = true
             });
             Ingredients.Add(new RecipeIngredientsList()
             {
+                Ingredients = null,
                 ProductName = Recipe.Ingredient8,
                 Amount = Recipe.Amount8,
                 UnitsIndex = 0,
-                IsLarge = true,
+                IsLarge = false,
                 IsLiquid = true
             });
         }
@@ -244,23 +256,29 @@ namespace DouApp.BindingContexts
 
         // Update the amount and unit of each ingredient in the recipe,
         // according to what the user entered
-        private void UpdateAmountAndUnits()
+        private void UpdateRecipe()
         {
+            Recipe.Ingredient1 = Ingredients[0].ProductName;
             Recipe.Amount1 = Ingredients[0].Amount;
             Recipe.Type1 = GetUnitFromIndex(Ingredients[0].UnitsIndex, Ingredients[0].IsLarge);
 
+            Recipe.Ingredient2 = Ingredients[1].ProductName;
             Recipe.Amount2 = Ingredients[1].Amount;
             Recipe.Type2 = GetUnitFromIndex(Ingredients[1].UnitsIndex, Ingredients[1].IsLarge);
 
+            Recipe.Ingredient3 = Ingredients[2].ProductName;
             Recipe.Amount3 = Ingredients[2].Amount;
             Recipe.Type3 = GetUnitFromIndex(Ingredients[2].UnitsIndex, Ingredients[2].IsLarge);
 
+            Recipe.Ingredient4 = Ingredients[3].ProductName;
             Recipe.Amount4 = Ingredients[3].Amount;
             Recipe.Type4 = GetUnitFromIndex(Ingredients[3].UnitsIndex, Ingredients[3].IsLarge);
 
+            Recipe.Ingredient5 = Ingredients[4].ProductName;
             Recipe.Amount5 = Ingredients[4].Amount;
             Recipe.Type5 = GetUnitFromIndex(Ingredients[4].UnitsIndex, Ingredients[4].IsLarge);
 
+            Recipe.Ingredient6 = Ingredients[5].ProductName;
             Recipe.Amount6 = Ingredients[5].Amount;
             Recipe.Type6 = GetUnitFromIndex(Ingredients[5].UnitsIndex, Ingredients[5].IsLarge);
 
@@ -302,7 +320,7 @@ namespace DouApp.BindingContexts
 
         // Check if it is possible (if requested amounts are smaller than amounts in containers)
         // Each container which needs filling is added to the returned list
-        public List<IngredientAmountToFill> CheckIfPossible()
+        private List<IngredientAmountToFill> IsThereEnoughInContainers()
         {
             List<IngredientAmountToFill> ingredients = new List<IngredientAmountToFill>();
 
@@ -388,15 +406,65 @@ namespace DouApp.BindingContexts
 
             return ingredients;
         }
-
-        // Assumes that it is possible to perform the action
-        // (checking if it is possible id done before calling the method)
-        /*
         public async Task<bool> LetsDoh(ContentPage page)
         {
-            // Create the command recipe from which the command string is created
+            UpdateRecipe();
+
+            // Check if ingredients in recipe match the ingredients in the Containers
+            var ingredientsNotInContainers = GetIngredientsNotInContainers(Recipe);
+            if (ingredientsNotInContainers.Count > 0)
+            {
+                // show a message and return false
+                string message = "";
+                foreach (var ingredient in ingredientsNotInContainers)
+                {
+                    message += ingredient + " is not in any of the containers!\n";
+                }
+                await page.DisplayAlert("Error!", message, "Ok");
+
+                return false;
+            }
+
+            // Update recipe to match containers order
+            Recipe = UpdateRecipeOrderToContainers(Recipe);
+
+            // Create ConvertedRecipe
+            CreateConvertedRecipe();
+
+            // Check if amount in containers is enough
+            // If not, show a message and return false
+            var ingredientsToFill = IsThereEnoughInContainers();
+            if (ingredientsToFill.Count > 0)
+            {
+                string message = "";
+                foreach (var ingredient in ingredientsToFill)
+                {
+                    message += "Not enough content in " + ingredient.ProductName + " container to make doh!\n"
+                            + "Please fill in " + (ingredient.AmountToFill).ToString() + " grams.\n";
+                }
+                await page.DisplayAlert("Error!", message, "Ok");
+
+                return false;
+            }
+
+            // Save Recipe to Database
+            SaveRecipe(false);
+
+            // Create CommandRecipe
             CreateCommandRecipe();
 
+            // Check if there is a bowl on the machine
+            // Read string from bluetooth (with a 5 seconds time limit)
+            /*
+            string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(5);
+            if (received.Contains("bowl"))
+            {
+                await page.DisplayAlert("Error!", "Please put the Bowl on the machine first.", "Ok");
+                return false;
+            }
+            */
+
+            /*
             // Create command string and send it via bluetooth
             string command = CreateCommandString();
 
@@ -404,76 +472,20 @@ namespace DouApp.BindingContexts
             if (DependencyService.Get<IBluetoothHelper>().IsConnected())
                 DependencyService.Get<IBluetoothHelper>().WriteStringToDevice(command);
             else
-                return false;
-
-            // This loop will run untill the command is finished, bowl is removed or user sends stop
-            while (true)
             {
-                // Show progress bar (maybe)
-
-                // Read string from bluetooth
-                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(60);
-
-                // Check recieved commands
-                if (received.Contains("bowl"))
-                {
-                    // Show Yes/No message.
-                    bool toContinue = await page.DisplayAlert("Continue?", "Bowl was removed from scale! Please place it on the scale and press Yes to continue, or press No to stop.", "Yes", "No");
-                    if (toContinue)
-                    {
-                        // If user chooses yes, send 'y' through bluetooth and continue
-                        DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("y");
-                    }
-                    else
-                    {
-                        // else, send 'n' through bluettoth and return false
-                        DependencyService.Get<IBluetoothHelper>().WriteStringToDevice("n");
-                        return false;
-                    }
-                }
-                else if (received.StartsWith("1"))
-                {
-                    // Remove given amount from the appropriate container
-                    // We do this now in case the user removed bowl after 
-                    // one of the large containers was opened.
-                    UpdateLargeContainer(received);
-                }
-                else if (received.StartsWith("2"))
-                {
-                    // Remove given amount from the appropriate container
-                    UpdateLargeContainer(received);
-                }
-                else if (received.StartsWith("3"))
-                {
-                    // Remove given amount from the appropriate container
-                    UpdateLargeContainer(received);
-                }
-                else if (received.Contains("done"))
-                {
-                    // Doh making is done, update the amounts in the containers
-                    UpdateAmountsInContainers();
-
-                    // Show a message and return true
-                    await page.DisplayAlert("Done!", "Dough making is complete! please remove the bowl and make delicious baked goods", "Ok");
-                    return true;
-                }
-                else if (received.Contains("stop"))
-                {
-                    return false;
-                }
-                else
-                {
-                    // Nothing was read, continue to next iteration
-                    continue;
-                }
+                await page.DisplayAlert("Error!", "Bluetooth device is not connected! Going back to recipe page", "Ok");
+                return false;
             }
-        }
-        */
+            */
 
-        public void SaveRecipe()
+            // Return true
+            return true;
+        }
+
+        public void SaveRecipe(bool updateRecipe = true)
         {
-            // Update amounts and units in the recipe
-            UpdateAmountAndUnits();
+            if (updateRecipe)
+                UpdateRecipe();
 
             Recipe.LastUse = DateTime.Now;
 
@@ -486,7 +498,7 @@ namespace DouApp.BindingContexts
         // Creates a recipe that will be used to update the containers
         // meaning that the amounts of all dry ingredients are in grams
         // and the liquid ingredients are in ml
-        public void CreateConvertedRecipe()
+        private void CreateConvertedRecipe()
         {
             ConvertedRecipe = new UserRecipe();
             ConvertedRecipe.UserID = Recipe.UserID;
@@ -538,7 +550,7 @@ namespace DouApp.BindingContexts
         // Creates a recipe that will be used to create the command to send to the machine
         // meaning that the amounts of the first 3 ingredients are in grams,
         // and the amount of the last 3 ingredients are in tsp
-        public void CreateCommandRecipe()
+        private void CreateCommandRecipe()
         {
             if (ConvertedRecipe == null)
                 CreateConvertedRecipe();
@@ -584,6 +596,50 @@ namespace DouApp.BindingContexts
             CommandRecipe.Amount8 = Recipe.Amount8;
         }
 
+        // Checks for each ingredient that is in the recipe if it is in one of the containers or not
+        // Returns all the recipe ingredients that are not in any of the containers
+        private List<string> GetIngredientsNotInContainers(UserRecipe recipe)
+        {
+            List<string> ingredientsNotInContainers = new List<string>();
+            var containers = App.Containers.GetContainers();
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient1))
+                ingredientsNotInContainers.Add(recipe.Ingredient1);
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient2))
+                ingredientsNotInContainers.Add(recipe.Ingredient2);
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient3))
+                ingredientsNotInContainers.Add(recipe.Ingredient3);
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient4))
+                ingredientsNotInContainers.Add(recipe.Ingredient4);
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient5))
+                ingredientsNotInContainers.Add(recipe.Ingredient5);
+
+            if (!IsIngredientInContainers(containers, recipe.Ingredient6))
+                ingredientsNotInContainers.Add(recipe.Ingredient6);
+
+            return ingredientsNotInContainers;
+        }
+
+        // Returns true if the given ingredient is in one of the containers
+        private bool IsIngredientInContainers(List<Container> containers, string ingredientName)
+        {
+            bool ingredientIn = false;
+            foreach (var container in containers)
+            {
+                if (container.Ingredient == ingredientName)
+                {
+                    ingredientIn = true;
+                    break;
+                }
+            }
+
+            return ingredientIn;
+        }
+
         /*
         private string CreateCommandString()
         {
@@ -598,42 +654,10 @@ namespace DouApp.BindingContexts
             command += "f6$" + ((int)(CommandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f7$" + ((int)(CommandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
             command += "f8$" + ((int)(CommandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            //command += "f3$" + ((int)(CommandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
+            //command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
             command += "b;^";
 
             return command;
-        }
-
-        private void UpdateAmountsInContainers(bool notLarge = true)
-        {
-            if (!notLarge)
-            {
-                App.Containers.RemoveFromContainer(1, ConvertedRecipe.Amount1);
-                App.Containers.RemoveFromContainer(2, ConvertedRecipe.Amount2);
-                App.Containers.RemoveFromContainer(3, ConvertedRecipe.Amount3);
-            }
-            App.Containers.RemoveFromContainer(4, ConvertedRecipe.Amount4);
-            App.Containers.RemoveFromContainer(5, ConvertedRecipe.Amount5);
-            App.Containers.RemoveFromContainer(6, ConvertedRecipe.Amount6);
-            App.Containers.RemoveFromContainer(7, ConvertedRecipe.Amount7);
-            App.Containers.RemoveFromContainer(8, ConvertedRecipe.Amount8);
-
-            App.Containers.SaveContainers();
-        }
-
-        private void UpdateLargeContainer(string received)
-        {
-            int container = int.Parse(received.Substring(0, 1));
-
-            int startIndex = 2;
-            int i = startIndex;
-            while (received[i] != ';')
-                i++;
-            int length = (i - 1) - startIndex + 1;
-            
-            decimal weight = decimal.Parse(received.Substring(startIndex, length));
-            App.Containers.RemoveFromContainer(container, weight);
-            App.Containers.SaveContainers();
         }
         */
     }

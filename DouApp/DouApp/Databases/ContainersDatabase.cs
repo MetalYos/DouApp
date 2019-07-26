@@ -206,10 +206,5 @@ namespace DouApp.Databases
         {
             GetContainer(id).Ingredient = ingredient;
         }
-
-        public void UpdateContainers()
-        {
-
-        }
     }
 }

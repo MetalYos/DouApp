@@ -73,14 +73,14 @@ namespace DouApp
 
                     await Navigation.PushAsync(new RecipePage
                     {
-                        BindingContext = new RecipePageController(recipe, false, false)
+                        BindingContext = new RecipePageController(recipe)
                     });
                 }
                 else
                 {
                     await Navigation.PushAsync(new RecipePage
                     {
-                        BindingContext = new RecipePageController(recipe, false)
+                        BindingContext = new RecipePageController(recipe)
                     });
                 }
             }
@@ -134,6 +134,14 @@ namespace DouApp
             await Navigation.PushAsync(new AddToContainersPage
             {
                 BindingContext = new AddToContainersPageController()
+            });
+        }
+
+        private async void SelectBlutoothButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new SelectBluetoothPage
+            {
+                BindingContext = new SelectBluetoothPageController()
             });
         }
     }
