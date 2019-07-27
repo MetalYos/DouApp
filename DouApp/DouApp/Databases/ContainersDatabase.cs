@@ -89,7 +89,7 @@ namespace DouApp.Databases
                     containersToDB.Amount5, false));
 
             if (containersToDB.Ingredient6 == null)
-                containers.Add(new Container(6, "Soda Powder", 0, false));
+                containers.Add(new Container(6, "Baking Powder", 0, false));
             else
                 containers.Add(new Container(6, containersToDB.Ingredient6, 
                     containersToDB.Amount6, false));

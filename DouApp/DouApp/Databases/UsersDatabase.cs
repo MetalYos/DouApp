@@ -15,6 +15,8 @@ namespace DouApp.Databases
     {
         private string userLoginURL = "https://dohconverter.azurewebsites.net/api/UserLogin";
         private string registerUserURL = "https://dohconverter.azurewebsites.net/api/UserRegister";
+        private string usernameExistsURL = "https://dohconverter.azurewebsites.net/api/UsernameExists";
+        private string emailExistsUrl = "https://dohconverter.azurewebsites.net/api/EmailExists";
 
         public int GetUserID(string username, string password)
         {
@@ -74,6 +76,74 @@ namespace DouApp.Databases
             }
 
             return user.ID;
+        }
+
+        public bool IsUsernameExists(string username)
+        {
+            User user = new User
+            {
+                ID = 0,
+                Username = username,
+                Email = "",
+                Password = ""
+            };
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(usernameExistsURL);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonOutput = JsonConvert.SerializeObject(user);
+
+                streamWriter.Write(jsonOutput);
+                streamWriter.Flush();
+                streamWriter.Close();
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    user = JsonConvert.DeserializeObject<User>(result.ToString());
+                }
+            }
+
+            return (user.ID != 0);
+        }
+
+        public bool IsEmailExists(string email)
+        {
+            User user = new User
+            {
+                ID = 0,
+                Username = "",
+                Email = email,
+                Password = ""
+            };
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(emailExistsUrl);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonOutput = JsonConvert.SerializeObject(user);
+
+                streamWriter.Write(jsonOutput);
+                streamWriter.Flush();
+                streamWriter.Close();
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    user = JsonConvert.DeserializeObject<User>(result.ToString());
+                }
+            }
+
+            return (user.ID != 0);
         }
     }
 }

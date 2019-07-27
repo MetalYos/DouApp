@@ -439,8 +439,11 @@ namespace DouApp.BindingContexts
                 string message = "";
                 foreach (var ingredient in ingredientsToFill)
                 {
+                    string units = "grams";
+                    if (ingredient.ProductName == "Water" || ingredient.ProductName == "Oil")
+                        units = "ml";
                     message += "Not enough content in " + ingredient.ProductName + " container to make doh!\n"
-                            + "Please fill in " + (ingredient.AmountToFill).ToString() + " grams.\n";
+                            + "Please fill in " + (ingredient.AmountToFill).ToString() + " " + units + ".\n";
                 }
                 await page.DisplayAlert("Error!", message, "Ok");
 
@@ -455,12 +458,14 @@ namespace DouApp.BindingContexts
 
             // Check if there is a bowl on the machine
             // Read string from bluetooth (with a 10 seconds time limit)
+            /*
             string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(10);
             if (received.Contains("bowl"))
             {
                 await page.DisplayAlert("Error!", "Please put the Bowl on the machine first.", "Ok");
                 return false;
             }
+            */
 
             // Return true
             return true;

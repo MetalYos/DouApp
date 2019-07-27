@@ -27,19 +27,30 @@ namespace DouApp
             string password = passwordEntry.Text;
             string rePassword = passwordReEntry.Text;
 
-            if (username == string.Empty)
+            if (username == string.Empty || username == null)
             {
                 // Username not entered alert
                 await DisplayAlert("Username error", "Username must be entered", "OK");
                 return;
             }
 
-            if (password == string.Empty)
+            if (email == string.Empty || email == null)
+            {
+                // Username not entered alert
+                await DisplayAlert("Email error", "Email must be entered", "OK");
+                return;
+            }
+
+            // TODO: check email is valid
+
+            if (password == string.Empty || password == null)
             {
                 // Password not entered alert
                 await DisplayAlert("Password error", "Password must be entered", "OK");
                 return;
             }
+
+            // TODO: check password is valid
 
             if (password != rePassword)
             {

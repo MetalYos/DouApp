@@ -38,9 +38,21 @@ namespace DouApp
             string password = passwordEntry.Text;
             int id = App.Users.GetUserID(username, password);
 
+            if (username == string.Empty || username == null)
+            {
+                await DisplayAlert("Error", "Enter a username", "OK");
+                return;
+            }
+
+            if (password == string.Empty || password == null)
+            {
+                await DisplayAlert("Error", "Enter a password", "OK");
+                return;
+            }
+
             if (id == 0)
             {
-                await DisplayAlert("Wrong credintials", "The entered Username or Password does not exist in database", "OK");
+                await DisplayAlert("Wrong credintials", "The entered Username or Password are incorrect", "OK");
                 return;
             }
 
