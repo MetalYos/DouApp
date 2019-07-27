@@ -19,12 +19,16 @@ namespace DouApp
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar(this, false);
-        }
 
-        public ICommand ClickCommand => new Command<string>((url) =>
-        {
-            Device.OpenUri(new System.Uri(url));
-        });
+            forgotPassLabel.GestureRecognizers.Add(
+                new TapGestureRecognizer()
+                {
+                    Command = new Command(() =>
+                    {
+                        Navigation.PushAsync(new ForgotPasswordPage());
+                    })
+                });
+        }
 
         private async void SignUpButton_Clicked(object sender, EventArgs e)
         {

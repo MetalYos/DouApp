@@ -21,20 +21,11 @@
                            TextColor="White"
                            LineColor="White"
                            IsPassword="True" />
-            <Label HorizontalOptions="Center"
-                   VerticalOptions="StartAndExpand">
-                <Label.FormattedText>
-                    <FormattedString>
-                        <Span Text="Forgot password?"
-                              TextColor="SteelBlue">
-                            <Span.GestureRecognizers>
-                                <ClickGestureRecognizer Command="{Binding ClickCommand}"
-                                          CommandParameter="https://xamarin.com" />
-                            </Span.GestureRecognizers>
-                        </Span>
-                    </FormattedString>
-                </Label.FormattedText>
-            </Label>
+            <Label x:Name="forgotPassLabel"
+                   HorizontalOptions="Center"
+                   VerticalOptions="StartAndExpand"
+                   Text="Forgot Password?"
+                   TextColor="SteelBlue" />
             <Button x:Name="loginButton"
                     Text="Login"
                     BorderWidth="2"
