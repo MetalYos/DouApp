@@ -26,6 +26,7 @@ namespace DouApp.Droid
     public class BluetoothHelper : IBluetoothHelper
     {
         private BluetoothSocket _socket = null;
+        private string readString = "";
 
         public async Task<bool> Connect(string name)
         {
@@ -129,14 +130,14 @@ namespace DouApp.Droid
                 throw new Exception("Bluetooth adapter is not enabled.");
         }
 
-        public async Task<string> ReadStringFromDevice(int maxSeconds)
+        public async Task<string> ReadStringFromDevice(char stopAt, int maxSeconds)
         {
             byte[] buffer = new byte[1024];  // buffer store for the stream
             int bytes; // bytes returned from read()
-            string message = "";
+            string message = readString;
 
             if (!_socket.InputStream.CanRead)
-                return message;
+                return "";
 
             try
             {
@@ -145,7 +146,7 @@ namespace DouApp.Droid
                 System.Diagnostics.Stopwatch stopWatch = new System.Diagnostics.Stopwatch();
                 stopWatch.Start();
                 TimeSpan maxTime = new TimeSpan(0, 0, maxSeconds);
-                while (!message.Contains('\n'))
+                while (true)
                 {
                     // Delay for 0.1 seconds
                     Thread.Sleep(100);
@@ -153,7 +154,24 @@ namespace DouApp.Droid
                     // Read from input string
                     buffer = new byte[1024];
                     bytes = await mmInStream.ReadAsync(buffer);
-                    message += Encoding.ASCII.GetString(buffer, 0, bytes);
+                    string chunck = Encoding.ASCII.GetString(buffer, 0, bytes);
+
+                    if (chunck.Contains(stopAt))
+                    {
+                        int index = chunck.IndexOf(stopAt) + 1;
+                        message += chunck.Substring(0, index);
+
+                        if (index < chunck.Length)
+                            readString = chunck.Substring(index);
+                        else
+                            readString = "";
+                        return message;
+                    }
+                    else
+                    {
+                        message += chunck;
+                    }
+
                     if (stopWatch.Elapsed == maxTime)
                     {
                         message = "";

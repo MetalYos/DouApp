@@ -17,7 +17,6 @@ namespace DouApp
     public partial class ProgressPage : ContentPage
     {
         public UserRecipe ConvertedRecipe { get; set; }
-        public UserRecipe CommandRecipe { get; set; }
 
         public ProgressPage()
         {
@@ -33,18 +32,6 @@ namespace DouApp
 
         public async void LetsDoh()
         {
-            // Create command string and send it via bluetooth
-            string command = CreateCommandString();
-
-            // Send command via bluetooth
-            if (DependencyService.Get<IBluetoothHelper>().IsConnected())
-                DependencyService.Get<IBluetoothHelper>().WriteStringToDevice(command);
-            else
-            {
-                await DisplayAlert("Error!", "Bluetooth device is not connected! Going back to recipe page", "Ok");
-                await Navigation.PopAsync();
-            }
-
             // The amount the progress bar advances each time
             // (It should b 1/ 8 but Container3 is missing from the machine).
             double progressChunk = 1.0 / 7.0;
@@ -56,8 +43,8 @@ namespace DouApp
             while (true)
             {
                 // Read string from bluetooth
-                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice();
-                testLabel.Text = received;
+                string received = await DependencyService.Get<IBluetoothHelper>().ReadStringFromDevice(';', 3600);
+                //testLabel.Text = received;
 
                 // Check recieved commands
                 if (received.Contains("bowl") && !sentNo)
@@ -221,25 +208,6 @@ namespace DouApp
             double currentProgress = progressBar.Progress;
             bool result = await progressBar.ProgressTo(currentProgress + progressChunk, time, easing);
             return result;
-        }
-
-        private string CreateCommandString()
-        {
-            string command = "";
-
-            // Division by 0.25 is done to containers that release 0.25 cup/spoon each time
-            // order of containers on the machine is 4 -> 1 -> 5 -> 2 -> 6 -> 7 -> 8
-            command += "f4$" + ((int)(CommandRecipe.Amount4 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f1$" + ((int)(CommandRecipe.Amount1)).ToString().PadLeft(3, '0') + ";";
-            command += "f5$" + ((int)(CommandRecipe.Amount5 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f2$" + ((int)(CommandRecipe.Amount2)).ToString().PadLeft(3, '0') + ";";
-            command += "f6$" + ((int)(CommandRecipe.Amount6 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f7$" + ((int)(CommandRecipe.Amount7 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            command += "f8$" + ((int)(CommandRecipe.Amount8 / 0.25M)).ToString().PadLeft(3, '0') + ";";
-            //command += "f3$" + ((int)(commandRecipe.Amount3)).ToString().PadLeft(3, '0') + ";";
-            command += "b;^";
-
-            return command;
         }
     }
 }

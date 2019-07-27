@@ -132,6 +132,7 @@ namespace DouApp
                 numTimes--;
                 try
                 {
+                    System.Threading.Thread.Sleep(100);
                     await DependencyService.Get<IBluetoothHelper>().Connect(name);
                 }
                 catch

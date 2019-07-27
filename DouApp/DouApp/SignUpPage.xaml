@@ -11,7 +11,7 @@
             <Image Source="icon.png" Aspect="AspectFit" WidthRequest="100" />
             <StackLayout BackgroundColor="#002670"
                          Padding="20,20,20,20"
-                         Spacing="20">
+                         Spacing="10">
                 <Label Text="Welcome"
                        FontSize="Large"
                        VerticalOptions="Center" 
@@ -24,7 +24,7 @@
                        TextColor="White"/>
                 <Label Text="Password length must be at least 6 characters long and must contain at least one Capital letter and one digit"
                        HorizontalOptions="StartAndExpand"
-                       VerticalOptions="Center"
+                       VerticalOptions="Start"
                        FontSize="Small"
                        TextColor="White"/>
                 <local:MyEntry x:Name="usernameEntry"

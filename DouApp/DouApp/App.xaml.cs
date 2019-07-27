@@ -23,24 +23,11 @@ namespace DouApp
         public static int UserID { get; set; }
 
         // Databases
-        static MockData database = null;
         static UsersDatabase userDatabase = null;
         static RecipesDatabase recipesDatabase = null;
         static IngredientsDatabase ingredientsDatabase = null;
         static ContainersDatabase containersDatabase = null;
         static int maxLoginTries = 3;
-
-        public static MockData Database
-        {
-            get
-            {
-                if (database == null)
-                {
-                    database = new MockData();
-                }
-                return database;
-            }
-        }
 
         public static UsersDatabase Users
         {

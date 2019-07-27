@@ -34,7 +34,7 @@ namespace DouApp.iOS
             throw new NotImplementedException();
         }
 
-        public Task<string> ReadStringFromDevice(int maxSeconds)
+        public Task<string> ReadStringFromDevice(char stopAt, int maxSeconds)
         {
             throw new NotImplementedException();
         }

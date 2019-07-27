@@ -49,8 +49,7 @@ namespace DouApp
             {
                 await Navigation.PushAsync(new ProgressPage()
                 {
-                    ConvertedRecipe = controller.ConvertedRecipe,
-                    CommandRecipe = controller.CommandRecipe
+                    ConvertedRecipe = controller.ConvertedRecipe
                 });
             }
         }
