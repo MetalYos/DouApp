@@ -150,7 +150,7 @@ namespace DouApp.Databases
             return (user.ID != 0);
         }
 
-        public bool IsEmailExists(string email)
+        public int GetUserIDByEmail(string email)
         {
             User user = new User
             {
@@ -181,7 +181,7 @@ namespace DouApp.Databases
                 }
             }
 
-            return (user.ID != 0);
+            return user.ID;
         }
     }
 }

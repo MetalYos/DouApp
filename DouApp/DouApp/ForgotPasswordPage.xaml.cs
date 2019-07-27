@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
+using DouApp.Models;
+
 namespace DouApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -41,7 +43,8 @@ namespace DouApp
             }
 
             // Checl if email belongs to registered user
-            if (!App.Users.IsEmailExists(email))
+            int userID = App.Users.GetUserIDByEmail(email);
+            if (userID == 0)
             {
                 await DisplayAlert("Email error", "Email does not belong to any registered user", "OK");
                 return;
@@ -49,6 +52,14 @@ namespace DouApp
 
             // Send mail
             await DisplayAlert("Email", "An email was sent to " + email + " with the new password.", "OK");
+
+            // Remove from Properties dictionary because the user reset his password
+            User user = App.Users.GetUserByID(userID);
+            if (App.Current.Properties.ContainsKey(user.Username))
+            {
+                App.Current.Properties.Remove(user.Username);
+                await App.Current.SavePropertiesAsync();
+            }
 
             // Return to previous page
             await Navigation.PopAsync();

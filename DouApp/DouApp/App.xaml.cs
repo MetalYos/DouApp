@@ -28,6 +28,7 @@ namespace DouApp
         static RecipesDatabase recipesDatabase = null;
         static IngredientsDatabase ingredientsDatabase = null;
         static ContainersDatabase containersDatabase = null;
+        static int maxLoginTries = 3;
 
         public static MockData Database
         {
@@ -87,6 +88,11 @@ namespace DouApp
                 }
                 return containersDatabase;
             }
+        }
+
+        public static int MaxLoginTries
+        {
+            get { return maxLoginTries; }
         }
 
         public App()

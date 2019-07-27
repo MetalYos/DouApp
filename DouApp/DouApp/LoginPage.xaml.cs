@@ -40,23 +40,53 @@ namespace DouApp
 
             string username = usernameEntry.Text;
             string password = passwordEntry.Text;
-            int id = App.Users.GetUserID(username, password);
 
+            // Check if username is empty or not
             if (username == string.Empty || username == null)
             {
                 await DisplayAlert("Error", "Enter a username", "OK");
                 return;
             }
 
+            // Check if password is empty or not
             if (password == string.Empty || password == null)
             {
                 await DisplayAlert("Error", "Enter a password", "OK");
                 return;
             }
 
+            // Get if username exists
+            bool usernameExists = App.Users.IsUsernameExists(username);
+            
+            // Check if he has any login attempts left
+            if (usernameExists && App.Current.Properties.ContainsKey(username))
+            {
+                if ((int)App.Current.Properties[username] == 0)
+                {
+                    await DisplayAlert("Error", "You have reached your maximum login attemps, use \"Forgot Password?\" link to reset password.", "OK");
+                    return;
+                }
+            }
+
+            // Get User ID from database
+            int id = App.Users.GetUserID(username, password);
             if (id == 0)
             {
                 await DisplayAlert("Wrong credintials", "The entered Username or Password are incorrect", "OK");
+
+                // Save the remaining number of times the user can login
+                if (usernameExists)
+                {
+                    if (!App.Current.Properties.ContainsKey(username))
+                        App.Current.Properties[username] = (App.MaxLoginTries - 1);
+                    else
+                    {
+                        int count = (int)App.Current.Properties[username];
+                        App.Current.Properties[username] = (count - 1);
+                    }
+                    await App.Current.SavePropertiesAsync();
+                }
+
                 return;
             }
 
