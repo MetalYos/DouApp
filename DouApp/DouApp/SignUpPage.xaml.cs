@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,34 +28,61 @@ namespace DouApp
             string password = passwordEntry.Text;
             string rePassword = passwordReEntry.Text;
 
+            // Check if Username is not empty
             if (username == string.Empty || username == null)
             {
-                // Username not entered alert
                 await DisplayAlert("Username error", "Username must be entered", "OK");
                 return;
             }
 
+            // Check if Email is not empty
             if (email == string.Empty || email == null)
             {
-                // Username not entered alert
                 await DisplayAlert("Email error", "Email must be entered", "OK");
                 return;
             }
 
-            // TODO: check email is valid
+            // Check that Email is valid
+            try
+            {
+                System.Net.Mail.MailAddress address = new System.Net.Mail.MailAddress(email);
+            }
+            catch (FormatException)
+            {
+                await DisplayAlert("Email error", "Email is not valid", "OK");
+                return;
+            }
 
+            // Check if Password is not empty
             if (password == string.Empty || password == null)
             {
-                // Password not entered alert
                 await DisplayAlert("Password error", "Password must be entered", "OK");
                 return;
             }
 
-            // TODO: check password is valid
+            // Check password is valid
+            var hasNumber = new Regex(@"[0-9]+");
+            var hasUpperChar = new Regex(@"[A-Z]+");
+            var hasMinMaxChars = new Regex(@".{6,255}");
+            if (!hasMinMaxChars.IsMatch(password))
+            {
+                await DisplayAlert("Password error", "Password length must be at least 6 characters long", "OK");
+                return;
+            }
+            if (!hasUpperChar.IsMatch(password))
+            {
+                await DisplayAlert("Password error", "Password must contain at least one Capittal letter", "OK");
+                return;
+            }
+            if (!hasNumber.IsMatch(password))
+            {
+                await DisplayAlert("Password error", "Password must contain at least one digit", "OK");
+                return;
+            }
 
+            // Check if Password and re-entered password match
             if (password != rePassword)
             {
-                // Password and re-entered password do not match alert
                 await DisplayAlert("Password error", "Re-entered password does not match the entered password", "OK");
                 return;
             }

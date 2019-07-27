@@ -17,6 +17,7 @@ namespace DouApp.Databases
         private string registerUserURL = "https://dohconverter.azurewebsites.net/api/UserRegister";
         private string usernameExistsURL = "https://dohconverter.azurewebsites.net/api/UsernameExists";
         private string emailExistsUrl = "https://dohconverter.azurewebsites.net/api/EmailExists";
+        private string getUserByIDURL = "https://dohconverter.azurewebsites.net/api/GetUserByID";
 
         public int GetUserID(string username, string password)
         {
@@ -50,6 +51,43 @@ namespace DouApp.Databases
             }
 
             return user.ID;
+        }
+
+        public User GetUserByID(int id)
+        {
+            User user = new User
+            {
+                ID = id,
+                Username = "",
+                Email = "",
+                Password = ""
+            };
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(getUserByIDURL);
+            httpWebRequest.ContentType = "application/json; charset=utf-8";
+            httpWebRequest.Method = "POST";
+            httpWebRequest.Accept = "application/json; charset=utf-8";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string jsonOutput = JsonConvert.SerializeObject(user);
+
+                streamWriter.Write(jsonOutput);
+                streamWriter.Flush();
+                streamWriter.Close();
+
+                HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    user = JsonConvert.DeserializeObject<User>(result.ToString());
+                }
+            }
+
+            if (user.ID == 0)
+                return null;
+
+            return user;
         }
 
         public int RegisterUser(User user)

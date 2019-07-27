@@ -22,6 +22,11 @@
                        VerticalOptions="Center"
                        FontSize="Medium"
                        TextColor="White"/>
+                <Label Text="Password length must be at least 6 characters long and must contain at least one Capital letter and one digit"
+                       HorizontalOptions="StartAndExpand"
+                       VerticalOptions="Center"
+                       FontSize="Small"
+                       TextColor="White"/>
                 <local:MyEntry x:Name="usernameEntry"
                                Placeholder="Enter Username"
                                LineColor="White"
